@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Creative Developer</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP & Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Lenis for Smooth Scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- Core & Typography --- */
+        :root {
+            --bg-color: #050505;
+            --text-color: #f3f4f6;
+            --accent-primary: #6366f1; /* Indigo */
+            --accent-secondary: #d946ef; /* Fuchsia */
+            --cursor-size: 15px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            cursor: none; /* Hide default cursor */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .display-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* --- Custom Cursor (Fixed) --- */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            background-color: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000; /* Max Z-Index */
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s, opacity 0.2s, box-shadow 0.3s;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.4); /* Subtler glow */
+            opacity: 0; /* Hidden until mouse moves */
+        }
+
+        #cursor.hovered {
+            width: 35px; /* Reduced from 60px */
+            height: 35px; /* Reduced from 60px */
+            background-color: rgba(255, 255, 255, 0.1); /* See-through center */
+            border: 1px solid rgba(255, 255, 255, 0.8); /* Thinner border */
+            backdrop-filter: blur(1px);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Reduced hover glow */
+        }
+
+        /* --- Noise Overlay Texture --- */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- Ambient Gradient Blobs --- */
+        .blob-cont {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.8;
+            animation: float 20s infinite alternate;
+        }
+
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--accent-primary), transparent); animation-delay: 0s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, var(--accent-secondary), transparent); animation-delay: -5s; }
+        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: radial-gradient(circle, #3b82f6, transparent); animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* --- 3D Grid Floor --- */
+        .grid-floor {
+            position: absolute;
+            bottom: -20%;
+            left: -50%;
+            width: 200%;
+            height: 60vh;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.3) 1px, transparent 1px);
+            background-size: 4rem 4rem;
+            transform: perspective(500px) rotateX(60deg);
+            opacity: 0.2;
+            mask-image: linear-gradient(to top, black 0%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(4rem); }
+        }
+
+        /* --- Utilities --- */
+        .word-wrap {
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: bottom;
+            line-height: 1;
+        }
+        
+        /* --- Marquee --- */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Project Card Hover */
+        .project-card:hover .project-img {
+            transform: scale(1.05);
+        }
+
+        /* Bento Grid Specifics */
+        .bento-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            transition: all 0.4s ease;
+        }
+        .bento-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    
+    <!-- Texture Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Background Blobs -->
+    <div class="blob-cont">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full p-6 md:p-10 flex justify-between items-center z-40 mix-blend-difference text-white">
+        <a href="#" class="text-xl font-bold tracking-tight hover-trigger">PM.</a>
+        <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-light">
+            <a href="#work" class="hover:text-indigo-400 transition-colors hover-trigger">Work</a>
+            <a href="#about" class="hover:text-indigo-400 transition-colors hover-trigger">About</a>
+            <a href="#contact" class="hover:text-indigo-400 transition-colors hover-trigger">Contact</a>
+        </div>
+        <button class="md:hidden hover-trigger">
+            <i data-lucide="menu"></i>
+        </button>
+    </nav>
+
+    <!-- Main Content Wrapper (for Lenis) -->
+    <main>
+
+        <!-- Hero Section -->
+        <section class="h-screen flex flex-col justify-center px-6 md:px-20 relative overflow-hidden pt-20">
+            <div class="grid-floor"></div>
+
+            <div class="max-w-[90vw] z-10">
+                <!-- Title -->
+                <h1 class="text-5xl md:text-7xl lg:text-8xl leading-tight md:leading-[0.9] font-bold mb-6 tracking-tighter mix-blend-overlay">
+                    <div class="word-wrap"><span class="hero-hidden-reveal inline-block">Software</span></div><br>
+                    <div class="word-wrap"><span class="hero-hidden-reveal inline-block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">Engineer</span></div><br>
+                    <div class="word-wrap"><span class="hero-hidden-reveal inline-block">& Creative.</span></div>
+                </h1>
+
+                <!-- Subtitle (Moved directly below title, removed border/gap) -->
+                <div class="max-w-2xl mt-4 hero-hidden-text">
+                    <p class="text-gray-400 text-lg md:text-xl lg:text-2xl font-light leading-relaxed">
+                        Crafting digital experiences at the intersection of logic and imagination. Based in Nairobi, Kenya.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Infinite Marquee / Tech Stack -->
+        <section class="py-12 border-y border-white/5 bg-black/20 backdrop-blur-sm">
+            <div class="marquee-container">
+                <div class="marquee-content text-3xl md:text-6xl font-bold text-white/20 font-['Space_Grotesk'] uppercase">
+                    Software Development • UI Design • Python • Java • Cybersecurity • Digital Forensics • Creative Computing • Software Development • UI Design •
+                </div>
+            </div>
+        </section>
+
+        <!-- Selected Work -->
+        <section id="work" class="py-32 px-6 md:px-20">
+            <div class="flex items-end justify-between mb-20">
+                <h2 class="text-5xl md:text-7xl font-bold tracking-tighter">Selected<br>Works</h2>
+                <span class="text-gray-400 hidden md:block">(01 — 04)</span>
+            </div>
+
+            <!-- Project Grid -->
+            <div class="flex flex-col gap-32">
+                
+                <!-- Project 1: Utility App -->
+                <div class="project-card group cursor-none hover-trigger w-full relative">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+                        <div class="md:col-span-7 overflow-hidden rounded-2xl relative aspect-[16/10]">
+                            <img src="GENCIU.PNG" 
+                                 class="project-img object-cover w-full h-full transition-transform duration-700 ease-out grayscale group-hover:grayscale-0" 
+                                 alt="Utility App Screenshot">
+                            
+                            <!-- Overlay & Links -->
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-6">
+                                <a href="https://genciu-70d2e.web.app/" class="px-6 py-3 bg-white text-black rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 hover-trigger">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i> Live Demo
+                                </a>
+                                <a href="https://github.com/ndanupesh/GenCIU.git" class="px-6 py-3 border border-white text-white rounded-full font-bold text-sm hover:bg-white hover:text-black transition-all flex items-center gap-2 hover-trigger">
+                                    <i data-lucide="github" class="w-4 h-4"></i> Code
+                                </a>
+                            </div>
+                        </div>
+                        <div class="md:col-span-5 md:pl-10">
+                            <span class="text-indigo-400 font-mono text-sm mb-4 block">01 / Utility Web App</span>
+                            <h3 class="text-4xl md:text-5xl font-bold mb-6 group-hover:text-indigo-300 transition-colors">GEN CIU</h3>
+                            <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                            A CIU-Free Token Entry Simulation Web Application that simulates prepaid electricity token entry without using a physical Customer Interface Unit, helping Kenyan users to input tokens remotely. It is built with HTML, CSS, and JavaScript, with a Firebase backend.
+                            </p>
+                            <div class="flex gap-3 text-sm text-gray-300 font-mono">
+                                <span class="px-3 py-1 border border-white/20 rounded-full">JavaScript</span>
+                                <span class="px-3 py-1 border border-white/20 rounded-full">Firebase</span>
+                                <span class="px-3 py-1 border border-white/20 rounded-full">IoT Concept</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Project 2: Digital Art Platform -->
+                <div class="project-card group cursor-none hover-trigger w-full relative">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+                        <div class="md:col-span-5 md:order-1 order-2 md:pr-10 md:text-right">
+                            <span class="text-fuchsia-400 font-mono text-sm mb-4 block">02 / Creative Platform</span>
+                            <h3 class="text-4xl md:text-5xl font-bold mb-6 group-hover:text-fuchsia-300 transition-colors"></h3>
+                            <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                                A dynamic platform showcasing photography and artwork from various artists. Built with a NoSQL database for flexible content management.
+                            </p>
+                            <div class="flex gap-3 text-sm text-gray-300 font-mono md:justify-end">
+                                <span class="px-3 py-1 border border-white/20 rounded-full">CSS</span>
+                                <span class="px-3 py-1 border border-white/20 rounded-full">Express</span>
+                                <span class="px-3 py-1 border border-white/20 rounded-full">MongoDB</span>
+                            </div>
+                        </div>
+                        <div class="md:col-span-7 md:order-2 order-1 overflow-hidden rounded-2xl relative aspect-[16/10]">
+                            <img src="Artsyrealm.PNG" 
+                                 class="project-img object-cover w-full h-full transition-transform duration-700 ease-out grayscale group-hover:grayscale-0" 
+                                 alt="AI Tool Screenshot">
+                             <!-- Overlay & Links -->
+                             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-6">
+                                <a href="https://digital-art-ten.vercel.app/" class="px-6 py-3 bg-white text-black rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 hover-trigger">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i> Live Demo
+                                </a>
+                                <a href="https://github.com/ndanupesh/DigitalArt.git" class="px-6 py-3 border border-white text-white rounded-full font-bold text-sm hover:bg-white hover:text-black transition-all flex items-center gap-2 hover-trigger">
+                                    <i data-lucide="github" class="w-4 h-4"></i> Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: AI Sales Tool -->
+                <div class="project-card group cursor-none hover-trigger w-full relative">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+                        <div class="md:col-span-7 overflow-hidden rounded-2xl relative aspect-[16/10]">
+                            <img src="Saleforecast.PNG" 
+                                 class="project-img object-cover w-full h-full transition-transform duration-700 ease-out grayscale group-hover:grayscale-0" 
+                                 alt="Art Platform Screenshot">
+                             <!-- Overlay & Links -->
+                             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-6">
+                                <a href="https://mlsales-forecasting-app-6fxa9bc374qe5k2cdcuwfp.streamlit.app/" class="px-6 py-3 bg-white text-black rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 hover-trigger">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i> Live Demo
+                                </a>
+                                <a href="https://github.com/ndanupesh/ML_Sales-Forecasting-App.git" class="px-6 py-3 border border-white text-white rounded-full font-bold text-sm hover:bg-white hover:text-black transition-all flex items-center gap-2 hover-trigger">
+                                    <i data-lucide="github" class="w-4 h-4"></i> Code
+                                </a>
+                            </div>
+                        </div>
+                        <div class="md:col-span-5 md:pl-10">
+                            <span class="text-indigo-400 font-mono text-sm mb-4 block">03 / AI & Machine Learning</span>
+                            <h3 class="text-4xl md:text-5xl font-bold mb-6 group-hover:text-indigo-300 transition-colors">Sales Forecasting App</h3>
+                            <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                             A Python-based predictive application deployed on Streamlit. Utilizes historical datasets and ML algorithms to accurately forecast future sales trends.
+                            </p>
+                            <div class="flex gap-3 text-sm text-gray-300 font-mono">
+                                <span class="px-3 py-1 border border-white/20 rounded-full">Python</span>
+                                <span class="px-3 py-1 border border-white/20 rounded-full">Streamlit</span>
+                                <span class="px-3 py-1 border border-white/20 rounded-full">Scikit-learn</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: HealthTech -->
+                <div class="project-card group cursor-none hover-trigger w-full relative">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+                        <div class="md:col-span-5 md:order-1 order-2 md:pr-10 md:text-right">
+                            <span class="text-fuchsia-400 font-mono text-sm mb-4 block">04 / HealthTech</span>
+                            <h3 class="text-4xl md:text-5xl font-bold mb-6 group-hover:text-fuchsia-300 transition-colors">MedMinder</h3>
+                            <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                                An adherence system enabling vulnerable patients to receive medication reminders while allowing caregivers to monitor progress via a relational database system.
+                            </p>
+                            <div class="flex gap-3 text-sm text-gray-300 font-mono md:justify-end">
+                                <span class="px-3 py-1 border border-white/20 rounded-full">MySQL</span>
+                                <span class="px-3 py-1 border border-white/20 rounded-full">System Design</span>
+                                <span class="px-3 py-1 border border-white/20 rounded-full">JS</span>
+                            </div>
+                        </div>
+                        <div class="md:col-span-7 md:order-2 order-1 overflow-hidden rounded-2xl relative aspect-[16/10]">
+                            <!-- Image: Medical -->
+                            <img src="Medminder.PNG" 
+                                 class="project-img object-cover w-full h-full transition-transform duration-700 ease-out grayscale group-hover:grayscale-0" 
+                                 alt="HealthTech Screenshot">
+                             <!-- Overlay & Links -->
+                             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-6">
+                                <a href="https://med-minder-self.vercel.app/" class="px-6 py-3 bg-white text-black rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 hover-trigger">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i> View Concept
+                                </a>
+                                <a href="https://github.com/ndanupesh/med-minder.git" class="px-6 py-3 border border-white text-white rounded-full font-bold text-sm hover:bg-white hover:text-black transition-all flex items-center gap-2 hover-trigger">
+                                    <i data-lucide="github" class="w-4 h-4"></i> Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-32 text-center">
+                <a href="https://github.com/ndanupesh" target="_blank" class="inline-block text-lg border-b border-white/30 pb-1 hover:text-indigo-400 hover:border-indigo-400 transition-all hover-trigger">
+                    View Full Project Archive
+                </a>
+            </div>
+        </section>
+
+        <!-- About / Bento Box Section (Refined & Creative) -->
+        <section id="about" class="py-32 px-6 md:px-20 bg-white/5 relative overflow-hidden">
+            <!-- Decorative circle -->
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-sm md:text-base font-mono text-indigo-400 mb-12 uppercase tracking-widest">About Me</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- 1. Fun Bio -->
+                    <div class="col-span-1 md:col-span-2 row-span-1 bento-card p-8 md:p-10 flex flex-col justify-center hover-trigger relative">
+                        <h3 class="text-2xl font-bold mb-4">Hello, I'm Patience, Pesh to friends and family:)</h3>
+                        <p class="text-xl md:text-2xl text-gray-300 leading-relaxed font-light">
+                            I'm an <span class="text-white font-medium">Applied Computer Technology Undergraduate</span> and aspiring <span class="text-white font-medium">Software Developer</span>.
+                            <br><br>
+                            With a specialization in <span class="text-indigo-300 font-medium">Cybersecurity</span>, I aim to build applications that are as secure as they are beautiful. When I'm not coding, you'll find me sketching, smashing birdies on the badminton court, or over-analyzing plot holes in crime documentaries.
+                        </p>
+                    </div>
+
+                    <!-- 2. Sonder Definition (Visual/Philosophy) -->
+                    <div class="col-span-1 bento-card p-8 flex flex-col justify-center items-start hover-trigger bg-indigo-900/10">
+                        <span class="text-xs font-mono text-indigo-400 uppercase mb-2">Philosophy</span>
+                        <h4 class="text-3xl font-bold italic font-serif mb-2">sonder</h4>
+                        <p class="text-gray-400 text-sm italic mb-4">n. the realization that each random passerby is living a life as vivid and complex as your own.</p>
+                        <div class="w-full h-1 bg-gradient-to-r from-indigo-500 to-transparent opacity-50"></div>
+                    </div>
+
+                    <!-- 3. Location / Status (Compact) -->
+                    <div class="col-span-1 bento-card p-6 flex flex-col justify-center items-center text-center hover-trigger relative overflow-hidden">
+                        <i data-lucide="map-pin" class="w-6 h-6 text-fuchsia-400 mb-2"></i>
+                        <h4 class="text-base font-bold"> Nairobi, Kenya. </h4>
+                        <div class="mt-2 px-3 py-1 bg-green-500/20 text-green-400 text-xs rounded-full border border-green-500/30 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Available
+                        </div>
+                    </div>
+
+                    <!-- 4. True Crime / Cybersecurity (Fun Connection) -->
+                    <div class="col-span-1 bento-card p-6 flex flex-col justify-center hover-trigger relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-red-900/10 transition-opacity opacity-0 group-hover:opacity-100"></div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <i data-lucide="fingerprint" class="w-6 h-6 text-red-400"></i>
+                            <h4 class="font-bold text-white">Detective Mode</h4>
+                        </div>
+                        <p class="text-sm text-gray-400">Why specialize in Cybersecurity? Well, blame that on <em>FBI: Most Wanted</em>. I wanted to be the brains behind the screens.</p>
+                    </div>
+
+                    <!-- 5. Badminton (Active) -->
+                    <div class="col-span-1 bento-card p-6 flex flex-col justify-center hover-trigger group">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-white">Badminton</h4>
+                            <i data-lucide="wind" class="w-6 h-6 text-blue-400 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                        <p class="text-sm text-gray-400">Court time is my downtime, and the only exercise you'll catch me doing &#128521;.</p>
+                    </div>
+
+                    <!-- 6. Music (Currently Listening) -->
+                    <div class="col-span-1 bento-card p-6 flex flex-col justify-center hover-trigger relative overflow-hidden group">
+                         <div class="absolute inset-0 bg-cover bg-center opacity-30 transition-transform duration-700 group-hover:scale-110" style="background-image: url('Spotify.PNG');"></div>
+                         <div class="absolute inset-0 bg-black/40"></div>
+                         <div class="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h4 class="text-indigo-300 text-xs font-mono uppercase tracking-widest mb-1">On Repeat</h4>
+                                <p class="text-lg font-bold">The Art of Loving - <em>Olivia Dean</em></p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center">
+                                <i data-lucide="play" class="w-3 h-3 fill-white"></i>
+                            </div>
+                         </div>
+                    </div>
+
+                    <!-- 7. Creative / Art (Visual) -->
+                    <div class="col-span-1 md:col-span-2 bento-card p-8 flex flex-row items-center justify-between hover-trigger relative overflow-hidden group">
+                         <!-- Abstract background graphic -->
+                         <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-indigo-500/10 to-transparent"></div>
+                         
+                         <div class="relative z-10 max-w-sm">
+                            <h4 class="text-xl font-bold mb-2 flex items-center gap-2">
+                                <i data-lucide="pencil" class="w-5 h-5 text-purple-400"></i> The Creative Side
+                            </h4>
+                            <p class="text-gray-400 text-sm">
+                                Software is logic, but design is emotion. I love sketching and exploring traditional art to keep my creativity flowing when the screen turns off. An art gallery event? Count me in!
+                            </p>
+                         </div>
+                         <div class="hidden md:block relative z-10 opacity-50 group-hover:opacity-100 transition-opacity">
+                            <i data-lucide="palette" class="w-16 h-16 text-white/20"></i>
+                         </div>
+                    </div>
+
+                    <!-- 8. Toolbelt (Full Width) -->
+                    <div class="col-span-1 md:col-span-3 bento-card p-8 flex flex-col md:flex-row items-center justify-between gap-6 hover-trigger">
+                        <div class="text-center md:text-left">
+                            <h4 class="text-xl font-bold mb-1">My Toolkit</h4>
+                            <p class="text-gray-400 text-sm">The daily drivers</p>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-8 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                            <!-- Cybersecurity -->
+                            <i data-lucide="shield-check" class="w-8 h-8 hover:text-green-400 transition-colors" title="Cybersecurity"></i>
+
+                            <!-- UI Design -->
+                            <i data-lucide="pen-tool" class="w-8 h-8 hover:text-pink-400 transition-colors" title="UI Design"></i>
+                            
+                            <!-- Python -->
+                            <i data-lucide="terminal" class="w-8 h-8 hover:text-yellow-400 transition-colors" title="Python"></i>
+                            
+                            <!-- HTML -->
+                            <i data-lucide="file-code" class="w-8 h-8 hover:text-orange-500 transition-colors" title="HTML"></i>
+                            
+                            <!-- CSS -->
+                            <i data-lucide="palette" class="w-8 h-8 hover:text-blue-500 transition-colors" title="CSS"></i>
+                            
+                            <!-- JavaScript -->
+                            <i data-lucide="braces" class="w-8 h-8 hover:text-yellow-300 transition-colors" title="JavaScript"></i>
+                            
+                            <!-- Java -->
+                            <i data-lucide="coffee" class="w-8 h-8 hover:text-red-500 transition-colors" title="Java"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact / Footer (Fixed Spacing) -->
+        <section id="contact" class="min-h-screen flex flex-col justify-center px-6 md:px-20 py-32 relative">
+            <div class="max-w-6xl w-full mx-auto">
+                <div class="mb-20">
+                    <p class="text-indigo-400 uppercase tracking-widest mb-6">What's Next?</p>
+                    <h2 class="text-5xl md:text-8xl lg:text-9xl font-bold tracking-tighter">
+                        Let's build <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">the future.</span>
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 border-t border-white/10 pt-12">
+                    <!-- Email Column -->
+                    <div class="flex items-center">
+                        <a href="mailto:hello@example.com" class="text-2xl md:text-3xl lg:text-4xl hover:text-indigo-400 transition-colors hover-trigger inline-flex items-center gap-3 break-all md:break-normal">
+                            ndanupeshii@gmail.com <i data-lucide="arrow-up-right" class="w-6 h-6 md:w-8 md:h-8"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Social Links Column (Right Aligned on Large Screens) -->
+                    <div class="flex flex-col lg:items-end gap-6 lg:gap-8">
+                        <div class="flex flex-wrap gap-6 md:gap-8 text-lg md:text-xl">
+                            <a href="https://www.linkedin.com/in/patience-muinde-040380286/" class="hover:text-indigo-400 hover-trigger transition-colors relative group">
+                                LinkedIn
+                                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-400 transition-all group-hover:w-full"></span>
+                            </a>
+                            <a href="https://ndanupeshii.medium.com/" class="hover:text-indigo-400 hover-trigger transition-colors relative group">
+                                Medium
+                                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-400 transition-all group-hover:w-full"></span>
+                            </a>
+                            <a href="#" class="hover:text-indigo-400 hover-trigger transition-colors relative group">
+                                Instagram
+                                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-400 transition-all group-hover:w-full"></span>
+                            </a>
+                        </div>
+                        <p class="text-gray-600 text-sm lg:mt-auto pt-8 lg:pt-0">© 2025 Portfolio. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- CURSOR LOGIC (Running first to ensure it works) ---
+        const cursor = document.getElementById('cursor');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+
+        // Initial set to avoid jump
+        gsap.set(cursor, {xPercent: -50, yPercent: -50});
+
+        document.addEventListener('mousemove', (e) => {
+            // Un-hide the cursor once the mouse actually moves
+            if (cursor.style.opacity === '0' || cursor.style.opacity === '') {
+                cursor.style.opacity = 1;
+            }
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Add hover effect
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            trigger.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- Initialize Libraries ---
+        try {
+            // Lucide Icons
+            lucide.createIcons();
+
+            // Time Script
+            function updateTime() {
+                const timeElement = document.getElementById('local-time');
+                if(timeElement) {
+                    const now = new Date();
+                    timeElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                }
+            }
+            setInterval(updateTime, 1000);
+            updateTime();
+
+            // Lenis (Smooth Scroll)
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            // GSAP Animations
+            gsap.registerPlugin(ScrollTrigger);
+
+            // HERO ANIMATION UPDATED: Uses .from() instead of .to()
+            // This ensures text is visible by default (CSS) but animates in via JS
+            const tl = gsap.timeline();
+            
+            // 1. Animate the main text sliding UP from "below"
+            tl.from('.hero-hidden-reveal', {
+                y: "110%", // Start fully hidden below
+                duration: 1.5,
+                stagger: 0.2,
+                ease: "power4.out"
+            })
+            // 2. Animate opacity/slide of subtitle & description
+            .from('.hero-hidden-text', {
+                opacity: 0,
+                y: 20,
+                duration: 1,
+                stagger: 0.1,
+                ease: "power2.out"
+            }, "-=1.0");
+
+            gsap.utils.toArray('.project-card').forEach(card => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    y: 100,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power3.out"
+                });
+            });
+
+            gsap.from('.bento-card', {
+                scrollTrigger: {
+                    trigger: '#about',
+                    start: "top 70%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power3.out"
+            });
+
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const blobs = document.querySelectorAll('.blob');
+                if(blobs.length >= 3) {
+                    blobs[0].style.transform = `translateY(${scrolled * 0.2}px)`;
+                    blobs[1].style.transform = `translateY(${scrolled * -0.1}px)`;
+                    blobs[2].style.transform = `translateY(${scrolled * 0.15}px)`;
+                }
+            });
+        } catch (error) {
+            console.error("Animation or Library Error:", error);
+        }
+    </script>
+</body>
+</html>
