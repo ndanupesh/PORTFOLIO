@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patience Muinde | Software. Security. Design.</title>
+  <meta name="description" content="Portfolio of Patience Muinde — software development, cybersecurity, digital forensics, and creative technology." />
+
+  <!-- Interaction libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Editorial fonts: softer, less cyber/abstract -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..900,70&family=Instrument+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f3eee5;
+      --paper-soft: #ebe2d6;
+      --paper-deep: #dccfbf;
+      --ink: #191613;
+      --ink-soft: #42372f;
+      --muted: #756b60;
+      --line: rgba(25, 22, 19, .16);
+      --line-strong: rgba(25, 22, 19, .28);
+      --cream: #fffaf0;
+      --clay: #b86f52;
+      --sage: #6f7d63;
+      --blue: #596f83;
+      --plum: #7b637c;
+      --charcoal: #151311;
+      --radius-xl: 34px;
+      --radius-md: 20px;
+      --container: min(1420px, calc(100vw - 44px));
+      --display: "Fraunces", Georgia, serif;
+      --body: "Instrument Sans", system-ui, sans-serif;
+      --serif: "Instrument Serif", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; background: var(--paper); }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(184, 111, 82, .24), transparent 34rem),
+        radial-gradient(circle at 88% 14%, rgba(111, 125, 99, .22), transparent 32rem),
+        linear-gradient(180deg, var(--paper), var(--paper-soft) 46%, var(--paper));
+      color: var(--ink);
+      font-family: var(--body);
+      overflow-x: hidden;
+      cursor: none;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    a { color: inherit; text-decoration: none; cursor: none; }
+    button { font: inherit; color: inherit; border: 0; background: none; cursor: none; }
+    img { display: block; width: 100%; max-width: 100%; }
+    ::selection { background: var(--ink); color: var(--paper); }
+
+    #meshCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -3;
+      opacity: .55;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 90;
+      opacity: .11;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+    }
+
+    #cursor, #cursorLabel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+    }
+
+    #cursor {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--ink);
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width .25s ease, height .25s ease, background .25s ease, border .25s ease, opacity .18s ease, mix-blend-mode .25s ease;
+    }
+
+    #cursor.is-hovering {
+      width: 48px;
+      height: 48px;
+      background: rgba(25, 22, 19, .08);
+      border: 1px solid rgba(25, 22, 19, .45);
+      mix-blend-mode: normal;
+      backdrop-filter: blur(6px);
+    }
+
+    #cursor.is-project {
+      width: 86px;
+      height: 86px;
+      background: var(--clay);
+      border: 1px solid rgba(255, 250, 240, .55);
+      mix-blend-mode: normal;
+    }
+
+    #cursorLabel {
+      transform: translate(-50%, -50%);
+      color: var(--cream);
+      font-family: var(--body);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .site-shell { position: relative; z-index: 1; }
+    .container { width: var(--container); margin-inline: auto; }
+
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 100;
+      padding: 24px clamp(20px, 4vw, 60px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--ink);
+      mix-blend-mode: multiply;
+    }
+
+    .brand {
+      font-family: var(--body);
+      font-weight: 800;
+      letter-spacing: -.06em;
+      font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px;
+      background: rgba(243, 238, 229, .62);
+      border: 1px solid rgba(25,22,19,.12);
+      border-radius: 999px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 60px rgba(25, 22, 19, .08);
+    }
+
+    .nav-links a {
+      display: inline-flex;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      color: rgba(25, 22, 19, .72);
+      transition: background .25s ease, color .25s ease;
+    }
+
+    .nav-links a:hover { background: var(--ink); color: var(--paper); }
+    .mobile-menu { display: none; }
+
+    .section { padding: clamp(88px, 12vw, 178px) 0; position: relative; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .eyebrow::before {
+      content: "";
+      width: 38px;
+      height: 1px;
+      background: currentColor;
+      opacity: .6;
+    }
+
+    .hero {
+      min-height: 100svh;
+      padding: 110px 0 42px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 34px;
+      width: min(72vw, 940px);
+      height: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      align-items: end;
+      gap: clamp(28px, 6vw, 84px);
+    }
+
+    .status-card {
+      align-self: start;
+      justify-self: end;
+      width: min(100%, 340px);
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255, 250, 240, .35);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 30px 90px rgba(25,22,19,.08);
+    }
+
+    .status-card .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 10px;
+      border-radius: 999px;
+      background: var(--sage);
+      box-shadow: 0 0 0 6px rgba(111,125,99,.14);
+    }
+
+    .status-card p:first-child {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .status-card p:last-child {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      line-height: 1.08;
+      color: var(--ink-soft);
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(4.4rem, 11.4vw, 12.6rem);
+      line-height: .82;
+      letter-spacing: -.082em;
+      max-width: 980px;
+    }
+
+    .word-wrap { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .05em; }
+    .soft-italic { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.05em; color: var(--clay); }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-top: clamp(26px, 4vw, 48px);
+      font-size: clamp(1.12rem, 1.65vw, 1.55rem);
+      line-height: 1.42;
+      color: var(--ink-soft);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, .34);
+      color: var(--ink-soft);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .soft-marquee {
+      border-block: 1px solid var(--line);
+      overflow: hidden;
+      background: rgba(255, 250, 240, .32);
+      backdrop-filter: blur(12px);
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 30s linear infinite;
+    }
+
+    .marquee-track span {
+      display: inline-flex;
+      align-items: center;
+      padding: 25px 18px;
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4.5vw, 5.6rem);
+      line-height: 1;
+      color: rgba(25, 22, 19, .28);
+      white-space: nowrap;
+    }
+
+    .marquee-track span::after {
+      content: "";
+      width: .42em;
+      height: .42em;
+      margin-left: 36px;
+      border-radius: 999px;
+      background: rgba(184, 111, 82, .36);
+    }
+
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 390px);
+      gap: 24px;
+      align-items: end;
+      margin-bottom: clamp(44px, 7vw, 92px);
+    }
+
+    .section-heading h2 {
+      font-family: var(--display);
+      font-size: clamp(3.4rem, 8.4vw, 10rem);
+      line-height: .83;
+      letter-spacing: -.075em;
+      font-weight: 800;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      line-height: 1.62;
+      font-size: 1rem;
+      max-width: 390px;
+    }
+
+    .experience-list { border-top: 1px solid var(--line-strong); }
+    .experience-row {
+      display: grid;
+      grid-template-columns: 220px minmax(260px, .8fr) minmax(0, 1.2fr);
+      gap: clamp(22px, 4vw, 56px);
+      padding: clamp(34px, 5vw, 64px) 0;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+
+    .experience-row::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      background: rgba(255, 250, 240, .42);
+      transition: width .45s ease;
+      z-index: -1;
+    }
+
+    .experience-row:hover::before { width: 100%; }
+    .date {
+      color: var(--clay);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding-top: 8px;
+    }
+    .role h3 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 3vw, 3.5rem);
+      line-height: .92;
+      letter-spacing: -.05em;
+      margin-bottom: 12px;
+    }
+    .role p { font-family: var(--serif); font-style: italic; font-size: 1.35rem; color: var(--muted); }
+    .experience-row .desc { color: var(--ink-soft); line-height: 1.72; font-size: 1rem; }
+
+    .work { background: var(--charcoal); color: var(--paper); }
+    .work .section-heading p, .work .eyebrow { color: rgba(243, 238, 229, .62); }
+    .work .eyebrow::before { background: rgba(243,238,229,.62); }
+
+    .project-stack { display: grid; gap: clamp(32px, 5vw, 74px); }
+    .project-card {
+      position: sticky;
+      top: 92px;
+      min-height: min(82vh, 820px);
+      display: grid;
+      grid-template-columns: minmax(0, .98fr) minmax(320px, .72fr);
+      gap: clamp(28px, 5vw, 70px);
+      align-items: stretch;
+      padding: clamp(18px, 2.8vw, 36px);
+      border: 1px solid rgba(243,238,229,.14);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(135deg, rgba(243,238,229,.09), rgba(243,238,229,.025)),
+        var(--charcoal);
+      box-shadow: 0 40px 100px rgba(0,0,0,.26);
+      overflow: hidden;
+    }
+
+    .project-card:nth-child(even) { grid-template-columns: minmax(320px, .72fr) minmax(0, .98fr); }
+    .project-card:nth-child(even) .project-visual { order: 2; }
+    .project-card:nth-child(even) .project-info { order: 1; text-align: right; align-items: flex-end; }
+
+    .project-visual {
+      position: relative;
+      min-height: 460px;
+      border-radius: calc(var(--radius-xl) - 12px);
+      overflow: hidden;
+      background: #0f0d0b;
+      isolation: isolate;
+    }
+
+    .project-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 38%, rgba(0,0,0,.34));
+      opacity: .75;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .project-visual img {
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      filter: saturate(.82) contrast(.96);
+      transform: scale(1.02);
+      transition: transform .8s ease, filter .5s ease;
+    }
+
+    .project-card:hover .project-visual img { transform: scale(1.07); filter: saturate(1.05) contrast(1); }
+
+    .project-links {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 15px;
+      border-radius: 999px;
+      background: rgba(255, 250, 240, .86);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      backdrop-filter: blur(12px);
+      transition: transform .25s ease, background .25s ease;
+    }
+    .project-link:hover { transform: translateY(-2px); background: var(--cream); }
+
+    .project-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: clamp(8px, 2vw, 18px) 0;
+    }
+
+    .project-number {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(4rem, 8vw, 9.5rem);
+      line-height: .78;
+      color: rgba(243,238,229,.18);
+      margin-bottom: 24px;
+    }
+    .project-kicker {
+      display: block;
+      margin-bottom: 16px;
+      color: #d4a084;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .project-info h3 {
+      max-width: 540px;
+      font-family: var(--display);
+      font-size: clamp(3rem, 5vw, 6.4rem);
+      line-height: .83;
+      letter-spacing: -.07em;
+      margin-bottom: 22px;
+    }
+    .project-info p {
+      max-width: 560px;
+      color: rgba(243, 238, 229, .72);
+      line-height: 1.65;
+      font-size: 1rem;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .project-card:nth-child(even) .tags { justify-content: flex-end; }
+    .tag {
+      padding: 9px 12px;
+      border: 1px solid rgba(243,238,229,.18);
+      border-radius: 999px;
+      color: rgba(243,238,229,.78);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .archive-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 68px;
+      color: var(--paper);
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 2.6vw, 2.8rem);
+      font-style: italic;
+    }
+    .archive-link span { border-bottom: 1px solid rgba(243,238,229,.42); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+
+    .bento {
+      position: relative;
+      min-height: 210px;
+      padding: clamp(22px, 3vw, 34px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 250, 240, .38);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+      transition: transform .35s ease, background .35s ease, border-color .35s ease;
+    }
+    .bento:hover { transform: translateY(-5px); background: rgba(255,250,240,.56); border-color: var(--line-strong); }
+    .bento.large { grid-column: span 4; min-height: 360px; }
+    .bento.medium { grid-column: span 2; }
+    .bento.wide { grid-column: span 3; }
+    .bento.full { grid-column: span 6; min-height: 180px; }
+
+    .bento h3, .bento h4 {
+      font-family: var(--display);
+      letter-spacing: -.04em;
+      line-height: .95;
+    }
+    .bento h3 { font-size: clamp(2.2rem, 4.8vw, 5rem); margin-bottom: 24px; max-width: 850px; }
+    .bento h4 { font-size: clamp(1.75rem, 2.4vw, 3rem); margin-bottom: 14px; }
+    .bento p { color: var(--ink-soft); line-height: 1.65; }
+    .bento .small-label {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--clay);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .bento .icon {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 22px;
+      color: var(--clay);
+    }
+    .bento.music {
+      color: var(--paper);
+      background: var(--charcoal);
+    }
+    .bento.music::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.18)), url('Spotify.PNG') center/cover;
+      opacity: .72;
+      transition: transform .7s ease;
+    }
+    .bento.music:hover::before { transform: scale(1.06); }
+    .bento.music > * { position: relative; z-index: 1; }
+    .bento.music p { color: rgba(243,238,229,.78); }
+
+    .tool-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .tool-chip {
+      padding: 10px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.22);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .contact {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      border-top: 1px solid var(--line);
+    }
+    .contact h2 {
+      font-family: var(--display);
+      font-size: clamp(4rem, 11vw, 13rem);
+      line-height: .78;
+      letter-spacing: -.085em;
+      margin-bottom: 52px;
+    }
+    .contact h2 em {
+      font-family: var(--serif);
+      font-weight: 400;
+      color: var(--clay);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
+      gap: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line-strong);
+    }
+    .email-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--display);
+      font-size: clamp(1.7rem, 4vw, 5rem);
+      line-height: .95;
+      letter-spacing: -.055em;
+      word-break: break-word;
+      transition: color .25s ease;
+    }
+    .email-link:hover { color: var(--clay); }
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .socials a {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: background .25s ease, color .25s ease;
+    }
+    .socials a:hover { background: var(--ink); color: var(--paper); }
+    .copyright { margin-top: 32px; text-align: right; color: var(--muted); font-size: 13px; }
+
+    .reveal, .split-line, .project-card, .experience-row, .bento { will-change: transform, opacity; }
+
+    @media (max-width: 980px) {
+      body, a, button { cursor: auto; }
+      #cursor, #cursorLabel { display: none; }
+      .nav { mix-blend-mode: normal; }
+      .nav-links { display: none; }
+      .mobile-menu { display: inline-flex; }
+      .hero-grid, .section-heading, .contact-grid { grid-template-columns: 1fr; }
+      .status-card { justify-self: start; order: -1; }
+      .experience-row { grid-template-columns: 1fr; }
+      .project-card, .project-card:nth-child(even) { position: relative; top: auto; min-height: auto; grid-template-columns: 1fr; }
+      .project-card:nth-child(even) .project-visual, .project-card:nth-child(even) .project-info { order: initial; text-align: left; align-items: flex-start; }
+      .project-card:nth-child(even) .tags { justify-content: flex-start; }
+      .project-visual { min-height: 320px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .bento.large, .bento.medium, .bento.wide, .bento.full { grid-column: span 1; }
+      .socials { justify-content: flex-start; }
+      .copyright { text-align: left; }
+    }
+
+    @media (max-width: 620px) {
+      :root { --container: min(100vw - 28px, 1420px); }
+      body { background: var(--paper); }
+      .hero { padding-top: 96px; }
+      h1 { font-size: clamp(3.8rem, 19vw, 6rem); }
+      .hero-copy { font-size: 1.05rem; }
+      .section { padding: 82px 0; }
+      .project-card { padding: 14px; border-radius: 24px; }
+      .project-info h3 { font-size: 3rem; }
+      .project-visual { min-height: 260px; border-radius: 18px; }
+      .project-links { left: 14px; bottom: 14px; }
+      .project-link { padding: 10px 12px; }
+      .bento { border-radius: 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="meshCanvas" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div id="cursor" aria-hidden="true"></div>
+  <div id="cursorLabel" aria-hidden="true">Open</div>
+
+  <nav class="nav" aria-label="Primary navigation">
+    <a href="#top" class="brand hover-trigger">PM.</a>
+    <div class="nav-links">
+      <a class="hover-trigger" href="#experience">Experience</a>
+      <a class="hover-trigger" href="#work">Work</a>
+      <a class="hover-trigger" href="#about">About</a>
+      <a class="hover-trigger" href="#contact">Contact</a>
+    </div>
+    <button class="mobile-menu hover-trigger" aria-label="Open menu"><i data-lucide="menu"></i></button>
+  </nav>
+
+  <main id="top" class="site-shell">
+    <section class="hero" aria-label="Portfolio introduction">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow reveal">Portfolio / 2026</p>
+          <h1 aria-label="Software, Cybersecurity, and Creative Technology">
+            <span class="word-wrap"><span class="hero-word">Software.</span></span><br>
+            <span class="word-wrap"><span class="hero-word">Cybersecurity.</span></span><br>
+            <span class="word-wrap"><span class="hero-word soft-italic">Creative</span></span><br>
+            <span class="word-wrap"><span class="hero-word">Technology.</span></span>
+          </h1>
+          <p class="hero-copy reveal">
+            Software Developer with hands-on experience building full-stack web applications and machine learning solutions. Crafting secure, user-centric digital experiences at the intersection of logic and imagination.
+          </p>
+          <div class="hero-meta reveal">
+            <span class="pill">Nairobi, Kenya</span>
+            <span class="pill">Software Developer Intern</span>
+            <span class="pill">Cybersecurity & Digital Forensics</span>
+            <span class="pill">Creative Interfaces</span>
+          </div>
+        </div>
+
+        <aside class="status-card reveal">
+          <p><span class="dot"></span>Currently</p>
+          <p>Designing interfaces with a developer’s logic, a security mindset, and a creative eye.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="soft-marquee" aria-label="Skills marquee">
+      <div class="marquee-track" aria-hidden="true">
+        <span>Next.js</span><span>React</span><span>JavaScript</span><span>Python</span><span>FastAPI</span><span>Tailwind CSS</span><span>Firebase</span><span>MongoDB</span><span>Cybersecurity</span><span>Digital Forensics</span><span>UI/UX Design</span><span>GitHub</span>
+        <span>Next.js</span><span>React</span><span>JavaScript</span><span>Python</span><span>FastAPI</span><span>Tailwind CSS</span><span>Firebase</span><span>MongoDB</span><span>Cybersecurity</span><span>Digital Forensics</span><span>UI/UX Design</span><span>GitHub</span>
+      </div>
+    </section>
+
+    <section id="experience" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow reveal">Experience</p>
+            <h2 class="split-title">Where theory meets delivery.</h2>
+          </div>
+          <p class="reveal">Recent roles and attachments where I have built frontend sections, worked with full-stack systems, supported users, and strengthened my understanding of secure digital products.</p>
+        </div>
+
+        <div class="experience-list">
+          <article class="experience-row hover-trigger">
+            <div class="date">May 2026 - Present</div>
+            <div class="role">
+              <h3>Software Developer Intern</h3>
+              <p>Momentum Labs</p>
+            </div>
+            <p class="desc">Developed the frontend for a client-facing digital product using Next.js, React, JavaScript, and Tailwind CSS, translating design requirements into responsive user interface sections. Built reusable components, implemented page layouts, and resolved frontend issues to improve usability and overall user experience.</p>
+          </article>
+
+          <article class="experience-row hover-trigger">
+            <div class="date">Jan 2026 - Mar 2026</div>
+            <div class="role">
+              <h3>Collaborative Software Dev</h3>
+              <p>KenGen ICT Attachment</p>
+            </div>
+            <p class="desc">Co-engineered a full-stack Procurement Planning System that automated budget tracking, supported compliance, and reduced manual Excel-based processes. Resolved approximately 500 monthly support tickets and participated in IT security walkthroughs covering Cisco Duo authentication and Microsoft LAPS.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="work" class="section work">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow reveal">Selected Works</p>
+            <h2 class="split-title">Projects with purpose.</h2>
+          </div>
+          <p class="reveal">A curated set of software, security, creative, and machine learning projects — presented with more space, stronger visual hierarchy, and smoother scroll-led movement.</p>
+        </div>
+
+        <div class="project-stack">
+          <article class="project-card project-trigger">
+            <div class="project-visual">
+              <img src="C2B.PNG" alt="Cookies to Breaches Dashboard screenshot" loading="lazy">
+              <div class="project-links">
+                <a href="https://cookiestobreaches.web.app/" target="_blank" rel="noreferrer" class="project-link hover-trigger"><i data-lucide="external-link"></i> Live Demo</a>
+                <a href="https://github.com/ndanupesh/Cookies-to-Breaches.git" target="_blank" rel="noreferrer" class="project-link hover-trigger"><i data-lucide="github"></i> Code</a>
+              </div>
+            </div>
+            <div class="project-info">
+              <div>
+                <div class="project-number">01</div>
+                <span class="project-kicker">Privacy Awareness App</span>
+                <h3>Cookies To Breaches</h3>
+                <p>Designed and developed an interactive web application to educate users on digital privacy, specifically tracking how browser cookies can lead to security breaches. Engineered distinct modules including a "Breach Simulation" and visual data mapping.</p>
+              </div>
+              <div class="tags"><span class="tag">JavaScript</span><span class="tag">HTML/CSS</span><span class="tag">Simulation</span></div>
+            </div>
+          </article>
+
+          <article class="project-card project-trigger">
+            <div class="project-visual">
+              <img src="GENCIU.PNG" alt="GEN CIU screenshot" loading="lazy">
+              <div class="project-links">
+                <a href="https://genciu-70d2e.web.app/" target="_blank" rel="noreferrer" class="project-link hover-trigger"><i data-lucide="external-link"></i> Live Demo</a>
+                <a href="https://github.com/ndanupesh/GenCIU.git" target="_blank" rel="noreferrer" class="project-link hover-trigger"><i data-lucide="github"></i> Code</a>
+              </div>
+            </div>
+            <div class="project-info">
+              <div>
+                <div class="project-number">02</div>
+                <span class="project-kicker">Utility Web App</span>
+                <h3>GEN CIU</h3>
+                <p>Created and designed a CIU-Free token entry web application to simulate prepaid electricity token entry without using a physical Customer Interface Unit, helping users to input tokens remotely.</p>
+              </div>
+              <div class="tags"><span class="tag">JavaScript</span><span class="tag">Firebase</span><span class="tag">IoT Concept</span></div>
+            </div>
+          </article>
+
+          <article class="project-card project-trigger">
+            <div class="project-visual">
+              <img src="Artsyrealm.PNG" alt="Artsy Realm screenshot" loading="lazy">
+              <div class="project-links">
+                <a href="https://digital-art-ten.vercel.app/" target="_blank" rel="noreferrer" class="project-link hover-trigger"><i data-lucide="external-link"></i> Live Demo</a>
+                <a href="https://github.com/ndanupesh/DigitalArt.git" target="_blank" rel="noreferrer" class="project-link hover-trigger"><i data-lucide="github"></i> Code</a>
+              </div>
+            </div>
+            <div class="project-info">
+              <div>
+                <div class="project-number">03</div>
+                <span class="project-kicker">Creative Platform</span>
+                <h3>Artsy Realm</h3>
+                <p>A dynamic platform showcasing photography and artwork from various artists. Built utilizing a NoSQL database architecture to handle flexible content management and media display seamlessly.</p>
+              </div>
+              <div class="tags"><span class="tag">MongoDB</span><span class="tag">Express</span><span class="tag">CSS</span></div>
+            </div>
+          </article>
+
+          <article class="project-card project-trigger">
+            <div class="project-visual">
+              <img src="Saleforecast.PNG" alt="Sales Forecasting App screenshot" loading="lazy">
+              <div class="project-links">
+                <a href="https://mlsales-forecasting-app-6fxa9bc374qe5k2cdcuwfp.streamlit.app/" target="_blank" rel="noreferrer" class="project-link hover-trigger"><i data-lucide="external-link"></i> Live Demo</a>
+                <a href="https://github.com/ndanupesh/ML_Sales-Forecasting-App.git" target="_blank" rel="noreferrer" class="project-link hover-trigger"><i data-lucide="github"></i> Code</a>
+              </div>
+            </div>
+            <div class="project-info">
+              <div>
+                <div class="project-number">04</div>
+                <span class="project-kicker">Machine Learning</span>
+                <h3>Sales Forecasting App</h3>
+                <p>A Python-based predictive application deployed on Streamlit. Utilizes historical datasets and machine learning algorithms to map and accurately forecast future sales trends.</p>
+              </div>
+              <div class="tags"><span class="tag">Python</span><span class="tag">Streamlit</span><span class="tag">Scikit-Learn</span></div>
+            </div>
+          </article>
+
+          <article class="project-card project-trigger">
+            <div class="project-visual" style="background: linear-gradient(135deg, rgba(184,111,82,.34), rgba(111,125,99,.28)), #211d19; display:grid; place-items:center;">
+              <div style="width:min(78%,620px); aspect-ratio: 1.45/1; border:1px solid rgba(243,238,229,.2); border-radius:30px; background:rgba(255,250,240,.08); display:grid; place-items:center; padding:36px; text-align:center;">
+                <p style="font-family:var(--serif); font-style:italic; font-size:clamp(2.2rem,5vw,5.8rem); line-height:.9; color:var(--paper);">In active architecture</p>
+              </div>
+            </div>
+            <div class="project-info">
+              <div>
+                <div class="project-number">05</div>
+                <span class="project-kicker">Active Architecture</span>
+                <h3>Articulate</h3>
+                <p>A full-stack AI-powered articulation and coaching platform. Integrating Next.js, FastAPI, and Python to bridge analytical backend infrastructure with intuitive frontend mechanics.</p>
+              </div>
+              <div class="tags"><span class="tag">Next.js</span><span class="tag">FastAPI</span><span class="tag">Python</span><span class="tag">In Development</span></div>
+            </div>
+          </article>
+        </div>
+
+        <a class="archive-link hover-trigger" href="https://github.com/ndanupesh" target="_blank" rel="noreferrer"><span>View Full Project Archive</span><i data-lucide="arrow-up-right"></i></a>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow reveal">About Me</p>
+            <h2 class="split-title">A developer, a cyber mind, and a creative eye.</h2>
+          </div>
+          <p class="reveal">The same curiosity that pulls me into secure systems also pulls me into design, writing, art, and how people experience technology.</p>
+        </div>
+
+        <div class="about-grid">
+          <article class="bento large hover-trigger">
+            <span class="small-label">Introduction</span>
+            <h3>Hello, I'm Patience, Pesh to friends and family:)</h3>
+            <p>I am currently pursuing an <strong>Applied Computer Technology degree</strong>, concentrating in Forensic Information Technology and Cybercrime at USIU-Africa.</p>
+            <br>
+            <p>I aim to build applications that are as secure as they are beautiful. When I'm not coding, you'll find me sketching, smashing birdies on the badminton court, or over-analyzing plot holes in crime documentaries.</p>
+          </article>
+
+          <a href="https://substack.com/@patiencendanu" target="_blank" rel="noreferrer" class="bento medium hover-trigger">
+            <span class="small-label">Research & Writing</span>
+            <h4>Neurodiversity & Tech</h4>
+            <p>Exploring the nuances of the mind and actively navigating the double empathy problem through my writing.</p>
+            <p style="margin-top:28px; font-weight:800; color:var(--ink);">Read on Substack →</p>
+          </a>
+
+          <article class="bento medium hover-trigger">
+            <i data-lucide="map-pin" class="icon"></i>
+            <span class="small-label">Location</span>
+            <h4>Nairobi, Kenya.</h4>
+            <p>Available for software, frontend, security-aware product work, internships, and creative digital projects.</p>
+          </article>
+
+          <article class="bento medium hover-trigger">
+            <i data-lucide="fingerprint" class="icon"></i>
+            <span class="small-label">Detective Mode</span>
+            <p>Why specialize in Cybercrime? Blame <em>FBI: Most Wanted</em>. I wanted to be the brains behind the screens. Because people lie, but their digital footprints don't.</p>
+          </article>
+
+          <article class="bento medium hover-trigger">
+            <i data-lucide="wind" class="icon"></i>
+            <span class="small-label">Badminton</span>
+            <h4>Court time is my downtime.</h4>
+            <p>And the only exercise you'll catch me doing 😉.</p>
+          </article>
+
+          <article class="bento wide music hover-trigger">
+            <span class="small-label" style="color:#e6cdbb;">On Repeat</span>
+            <h4>The Art of Loving</h4>
+            <p>Olivia Dean</p>
+          </article>
+
+          <article class="bento wide hover-trigger">
+            <i data-lucide="pencil" class="icon"></i>
+            <span class="small-label">The Creative Side</span>
+            <p>Software is logic, but design is emotion. I love sketching and exploring traditional art to keep my creativity flowing when the screen turns off. Constantly seeking inspiration from platforms like Awwwards.</p>
+          </article>
+
+          <article class="bento full hover-trigger">
+            <div class="tool-row">
+              <div>
+                <span class="small-label">My Toolkit</span>
+                <h4>The daily drivers</h4>
+              </div>
+              <div class="tools" aria-label="Technical skills">
+                <span class="tool-chip">Next.js</span>
+                <span class="tool-chip">React</span>
+                <span class="tool-chip">JavaScript</span>
+                <span class="tool-chip">Tailwind CSS</span>
+                <span class="tool-chip">Python</span>
+                <span class="tool-chip">FastAPI</span>
+                <span class="tool-chip">Firebase</span>
+                <span class="tool-chip">MongoDB</span>
+                <span class="tool-chip">Cybersecurity</span>
+                <span class="tool-chip">Digital Forensics</span>
+                <span class="tool-chip">Git/GitHub</span>
+                <span class="tool-chip">Figma</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact section">
+      <div class="container">
+        <p class="eyebrow reveal">What's Next?</p>
+        <h2 class="split-title">Let's build <br><em>the future.</em></h2>
+        <div class="contact-grid">
+          <a class="email-link hover-trigger" href="mailto:ndanupeshii@gmail.com">ndanupeshii@gmail.com <i data-lucide="arrow-up-right"></i></a>
+          <div>
+            <div class="socials">
+              <a class="hover-trigger" href="https://www.linkedin.com/in/patience-muinde-040380286/" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a class="hover-trigger" href="https://github.com/ndanupesh" target="_blank" rel="noreferrer">Github</a>
+              <a class="hover-trigger" href="https://substack.com/@patiencendanu" target="_blank" rel="noreferrer">Substack</a>
+              <a class="hover-trigger" href="https://ndanupeshii.medium.com/" target="_blank" rel="noreferrer">Medium</a>
+            </div>
+            <p class="copyright">© 2026 Portfolio. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (window.lucide) lucide.createIcons();
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion && window.Lenis) {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        wheelMultiplier: .9,
+        touchMultiplier: 1.4
+      });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    const cursor = document.querySelector('#cursor');
+    const cursorLabel = document.querySelector('#cursorLabel');
+    const isFinePointer = window.matchMedia('(pointer:fine)').matches;
+
+    if (isFinePointer && cursor) {
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+
+      gsap.set([cursor, cursorLabel], { xPercent: -50, yPercent: -50 });
+
+      window.addEventListener('mousemove', (event) => {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+        gsap.to(cursor, { x: mouseX, y: mouseY, opacity: 1, duration: .18, ease: 'power3.out' });
+        gsap.to(cursorLabel, { x: mouseX, y: mouseY, duration: .18, ease: 'power3.out' });
+      });
+
+      document.querySelectorAll('.hover-trigger, a, button').forEach((el) => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('is-hovering'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('is-hovering'));
+      });
+
+      document.querySelectorAll('.project-trigger').forEach((el) => {
+        el.addEventListener('mouseenter', () => {
+          cursor.classList.add('is-project');
+          gsap.to(cursorLabel, { opacity: 1, duration: .15 });
+        });
+        el.addEventListener('mouseleave', () => {
+          cursor.classList.remove('is-project');
+          gsap.to(cursorLabel, { opacity: 0, duration: .15 });
+        });
+      });
+
+      document.querySelectorAll('.hover-trigger, .project-trigger').forEach((el) => {
+        el.addEventListener('mousemove', (event) => {
+          const rect = el.getBoundingClientRect();
+          const x = event.clientX - rect.left - rect.width / 2;
+          const y = event.clientY - rect.top - rect.height / 2;
+          gsap.to(el, { x: x * .035, y: y * .035, duration: .3, ease: 'power3.out' });
+        });
+        el.addEventListener('mouseleave', () => gsap.to(el, { x: 0, y: 0, duration: .45, ease: 'elastic.out(1, .5)' }));
+      });
+    }
+
+    if (!prefersReducedMotion) {
+      gsap.from('.hero-word', {
+        yPercent: 110,
+        rotate: 3,
+        duration: 1.25,
+        stagger: .12,
+        ease: 'expo.out',
+        delay: .12
+      });
+
+      gsap.from('.reveal', {
+        y: 28,
+        opacity: 0,
+        duration: .9,
+        ease: 'power3.out',
+        stagger: .08,
+        delay: .24
+      });
+
+      document.querySelectorAll('.split-title').forEach((title) => {
+        const words = title.textContent.trim().split(' ');
+        title.innerHTML = words.map(word => `<span class="word-wrap"><span class="split-line">${word}</span></span>`).join(' ');
+        gsap.from(title.querySelectorAll('.split-line'), {
+          scrollTrigger: { trigger: title, start: 'top 82%' },
+          yPercent: 110,
+          rotate: 2,
+          duration: .95,
+          stagger: .055,
+          ease: 'expo.out'
+        });
+      });
+
+      gsap.utils.toArray('.experience-row').forEach((row) => {
+        gsap.from(row, {
+          scrollTrigger: { trigger: row, start: 'top 85%' },
+          y: 45,
+          opacity: 0,
+          duration: .85,
+          ease: 'power3.out'
+        });
+      });
+
+      gsap.utils.toArray('.project-card').forEach((card, index) => {
+        gsap.from(card, {
+          scrollTrigger: { trigger: card, start: 'top 82%' },
+          y: 80,
+          opacity: 0,
+          duration: .9,
+          ease: 'power3.out'
+        });
+
+        gsap.to(card.querySelector('img'), {
+          scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true },
+          yPercent: index % 2 === 0 ? -7 : 7,
+          ease: 'none'
+        });
+      });
+
+      gsap.utils.toArray('.bento').forEach((card, index) => {
+        gsap.from(card, {
+          scrollTrigger: { trigger: card, start: 'top 88%' },
+          y: 38,
+          opacity: 0,
+          duration: .7,
+          delay: (index % 3) * .05,
+          ease: 'power3.out'
+        });
+      });
+    }
+
+    const canvas = document.querySelector('#meshCanvas');
+    const ctx = canvas.getContext('2d');
+    const mouse = { x: 0.5, y: 0.5 };
+    let width, height, particles;
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = canvas.width = Math.floor(window.innerWidth * dpr);
+      height = canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      createParticles();
+    }
+
+    function createParticles() {
+      const count = window.innerWidth < 700 ? 26 : 56;
+      particles = Array.from({ length: count }, (_, i) => ({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 140 + 60,
+        vx: (Math.random() - .5) * .18,
+        vy: (Math.random() - .5) * .18,
+        hue: i % 4
+      }));
+    }
+
+    function drawMesh() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      const palette = [
+        'rgba(184,111,82,.16)',
+        'rgba(111,125,99,.14)',
+        'rgba(89,111,131,.12)',
+        'rgba(123,99,124,.10)'
+      ];
+
+      particles.forEach((p) => {
+        const pullX = (mouse.x * window.innerWidth - p.x) * .0009;
+        const pullY = (mouse.y * window.innerHeight - p.y) * .0009;
+        p.x += p.vx + pullX;
+        p.y += p.vy + pullY;
+        if (p.x < -p.r) p.x = window.innerWidth + p.r;
+        if (p.x > window.innerWidth + p.r) p.x = -p.r;
+        if (p.y < -p.r) p.y = window.innerHeight + p.r;
+        if (p.y > window.innerHeight + p.r) p.y = -p.r;
+
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        gradient.addColorStop(0, palette[p.hue]);
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(drawMesh);
+    }
+
+    window.addEventListener('mousemove', (event) => {
+      mouse.x = event.clientX / window.innerWidth;
+      mouse.y = event.clientY / window.innerHeight;
+    });
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawMesh();
+  </script>
+</body>
+</html>

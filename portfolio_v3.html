@@ -19,40 +19,33 @@
 
   <style>
     :root {
-      /* Balanced botanical editorial palette: ivory, cream, sage, olive, burgundy, oxblood, espresso, and black. Mostly flat colour blocks, no mixed palette gradients. */
-      --ivory: #F1F0EA;
+      /* Editorial palette inspired by the references: cream, sand, dusty pink, burgundy, citron, and Tyrian purple. */
       --cream: #EFEFC9;
-      --soft-cream: #F1F0EA;
-      --sage-mist: #C4C5A0;
-      --olive: #75763E;
-      --deep-olive: #5A5E27;
-      --burgundy: #580410;
-      --oxblood: #390000;
-      --espresso: #2F1B1A;
-      --black: #090707;
-      --ink: #161111;
-      --ink-soft: #2F1B1A;
-      --muted: #675C4F;
-      --paper: #F1F0EA;
-      --paper-soft: #EFEFC9;
-      --paper-deep: #C4C5A0;
-      --white: #FFFDF7;
-      --rose: #B79B92;
-      --hot-pink: #580410;
-      --red: #580410;
-      --violet: #640017;
-      --purple: #640017;
-      --lavender: #EFEFC9;
-      --clay: #C4C5A0;
-      --sage: #5A5E27;
-      --blue: #75763E;
-      --plum: #640017;
-      --charcoal: #2F1B1A;
+      --soft-cream: #EEE4DA;
       --sand: #D8C4AC;
       --dusty-pink: #C8A49F;
+      --burgundy: #640017;
       --citron: #CAD183;
-      --tyrian-purple: #640017;
+      --tyrian-purple: #66023C;
       --deep-brown: #2F1B1A;
+      --ink: #161111;
+      --ink-soft: #3E2B2A;
+      --muted: #6F5B56;
+      --paper: #EEE4DA;
+      --paper-soft: #EFEFC9;
+      --paper-deep: #D8C4AC;
+      --white: #FFFDF7;
+      --rose: #C8A49F;
+      --hot-pink: #640017;
+      --red: #640017;
+      --violet: #66023C;
+      --purple: #66023C;
+      --lavender: #EFEFC9;
+      --clay: #D8C4AC;
+      --sage: #5A5E27;
+      --blue: #5A5E27;
+      --plum: #66023C;
+      --charcoal: #2F1B1A;
       --line: rgba(22, 17, 17, .15);
       --line-strong: rgba(22, 17, 17, .30);
       --radius-xl: 34px;
@@ -67,7 +60,11 @@
     html { scroll-behavior: auto; background: var(--paper); }
     body {
       min-height: 100vh;
-      background: var(--ivory);
+      background:
+        radial-gradient(circle at 82% 12%, rgba(202, 209, 131, .44), transparent 28rem),
+        radial-gradient(circle at 12% 28%, rgba(200, 164, 159, .36), transparent 30rem),
+        radial-gradient(circle at 92% 72%, rgba(102, 2, 60, .16), transparent 34rem),
+        linear-gradient(180deg, var(--soft-cream) 0%, var(--cream) 42%, var(--paper) 100%);
       color: var(--ink);
       font-family: var(--body);
       overflow-x: hidden;
@@ -88,7 +85,7 @@
       height: 100%;
       pointer-events: none;
       z-index: -3;
-      opacity: .16;
+      opacity: .55;
     }
 
     .grain {
@@ -97,7 +94,7 @@
       pointer-events: none;
       z-index: 90;
       opacity: .11;
-      mix-blend-mode: normal;
+      mix-blend-mode: multiply;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
     }
 
@@ -174,7 +171,7 @@
       align-items: center;
       gap: 6px;
       padding: 7px;
-      background: rgba(241, 240, 234, .78);
+      background: rgba(243, 238, 229, .62);
       border: 1px solid rgba(25,22,19,.12);
       border-radius: 999px;
       backdrop-filter: blur(18px);
@@ -228,13 +225,17 @@
     .hero::before {
       content: "";
       position: absolute;
-      right: clamp(22px, 5vw, 72px);
-      top: 138px;
-      width: min(34vw, 520px);
-      height: min(52vh, 520px);
-      border-radius: 34px;
-      background: var(--burgundy);
-      opacity: .92;
+      width: min(58vw, 760px);
+      height: min(58vw, 760px);
+      right: -14vw;
+      top: 12vh;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 28%, rgba(233, 75, 146, .42), transparent 36%),
+        radial-gradient(circle at 70% 40%, rgba(125, 77, 255, .30), transparent 42%),
+        radial-gradient(circle at 56% 78%, rgba(201, 65, 59, .20), transparent 42%);
+      filter: blur(28px);
+      opacity: .9;
       z-index: -2;
     }
 
@@ -246,7 +247,7 @@
       width: min(72vw, 940px);
       height: 1px;
       transform: translateX(-50%);
-      background: var(--line-strong);
+      background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
     }
 
     .hero-grid {
@@ -263,8 +264,9 @@
       padding: 22px;
       border: 1px solid var(--line);
       border-radius: 24px;
-      background: var(--cream);
-      box-shadow: 0 24px 60px rgba(57, 0, 0, .18);
+      background: rgba(239, 239, 201, .62);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 30px 90px rgba(100, 0, 23, .10), 0 18px 50px rgba(47,27,26,.08);
     }
 
     .status-card .dot {
@@ -333,10 +335,12 @@
     }
 
     .capability-reel {
-      padding: 22px 0;
-      border-block: 1px solid rgba(22,17,17,.14);
-      background: var(--burgundy);
-      color: var(--cream);
+      padding: 18px 0;
+      border-block: 1px solid rgba(22,17,17,.12);
+      background:
+        radial-gradient(circle at 18% 50%, rgba(202,209,131,.28), transparent 24rem),
+        radial-gradient(circle at 84% 50%, rgba(200,164,159,.20), transparent 26rem),
+        linear-gradient(90deg, rgba(238,228,218,.96), rgba(239,239,201,.88));
       overflow: hidden;
     }
 
@@ -352,16 +356,15 @@
       font-weight: 800;
       letter-spacing: .16em;
       text-transform: uppercase;
-      color: var(--cream);
+      color: var(--burgundy);
     }
 
     .reel-window {
       overflow: hidden;
-      border-top: 1px solid rgba(239,239,201,.26);
-      border-bottom: 1px solid rgba(239,239,201,.26);
-      border-radius: 0;
-      background: transparent;
-      box-shadow: none;
+      border: 1px solid rgba(22,17,17,.13);
+      border-radius: 999px;
+      background: rgba(255,253,247,.52);
+      box-shadow: inset 0 0 0 1px rgba(255,253,247,.34);
     }
 
     .reel-track {
@@ -374,9 +377,9 @@
       display: inline-flex;
       align-items: baseline;
       gap: 10px;
-      padding: 16px 34px;
+      padding: 17px 30px;
       white-space: nowrap;
-      color: var(--cream);
+      color: var(--ink);
       font-size: 12px;
       font-weight: 800;
       letter-spacing: .13em;
@@ -389,7 +392,7 @@
       font-weight: 400;
       letter-spacing: 0;
       text-transform: none;
-      color: var(--citron);
+      color: var(--tyrian-purple);
     }
 
     .reel-item::after {
@@ -398,8 +401,8 @@
       height: 7px;
       margin-left: 22px;
       border-radius: 999px;
-      background: var(--citron);
-      opacity: .9;
+      background: var(--burgundy);
+      opacity: .72;
     }
 
     @keyframes reel { to { transform: translateX(-50%); } }
@@ -428,84 +431,36 @@
     }
 
     #experience {
-      background: var(--ivory);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,253,247,.52), transparent 24rem),
+        radial-gradient(circle at 92% 24%, rgba(202,209,131,.30), transparent 26rem),
+        linear-gradient(135deg, var(--sand) 0%, var(--soft-cream) 54%, var(--dusty-pink) 100%);
       border-block: 1px solid rgba(22,17,17,.10);
     }
 
-    #experience .section-heading h2 { color: var(--burgundy); }
-
-    .experience-list {
-      display: grid;
-      gap: 18px;
-      border-top: 0;
-    }
-
+    .experience-list { border-top: 1px solid var(--line-strong); }
     .experience-row {
       display: grid;
       grid-template-columns: 220px minmax(260px, .8fr) minmax(0, 1.2fr);
       gap: clamp(22px, 4vw, 56px);
-      padding: clamp(30px, 4.8vw, 62px);
-      border: 1px solid rgba(239,239,201,.20);
-      border-radius: var(--radius-xl);
+      padding: clamp(34px, 5vw, 64px) 0;
+      border-bottom: 1px solid var(--line);
       position: relative;
-      overflow: hidden;
-      box-shadow: 0 28px 80px rgba(47,27,26,.12);
-      color: var(--cream);
-    }
-
-    /* Experience uses bold blocks, but each card borrows from the full palette so it does not feel like a simple light-to-dark sequence. */
-    .experience-row:nth-child(1) {
-      background: var(--deep-olive);
-      color: var(--cream);
-      border-color: rgba(239,239,201,.28);
-    }
-    .experience-row:nth-child(2) {
-      background: var(--burgundy);
-      color: var(--cream);
-      border-color: rgba(239,239,201,.26);
-    }
-    .experience-row:nth-child(1) .date { color: var(--citron); }
-    .experience-row:nth-child(2) .date { color: var(--cream); }
-    .experience-row:nth-child(1) .role p { color: rgba(239,239,201,.72); }
-    .experience-row:nth-child(2) .role p { color: var(--sand); }
-    .experience-row:nth-child(1)::after,
-    .experience-row:nth-child(2)::after {
-      content: "";
-      position: absolute;
-      right: clamp(18px, 3vw, 42px);
-      bottom: -72px;
-      width: clamp(130px, 14vw, 210px);
-      aspect-ratio: 1;
-      border-radius: 999px;
-      z-index: 0;
-      pointer-events: none;
-      background: transparent;
-    }
-    .experience-row:nth-child(1)::after {
-      border: 1px solid rgba(239, 239, 201, .36);
-      box-shadow: -42px -30px 0 -24px rgba(88, 4, 16, .72);
-    }
-    .experience-row:nth-child(2)::after {
-      border: 1px solid rgba(239, 239, 201, .30);
-      box-shadow: -42px -30px 0 -24px rgba(90, 94, 39, .72);
     }
 
     .experience-row::before {
       content: "";
       position: absolute;
-      inset: 16px auto 16px 16px;
+      inset: 0 auto 0 0;
       width: 0;
-      border-radius: 999px;
-      background: var(--cream);
-      opacity: .72;
+      background: rgba(239, 239, 201, .30);
       transition: width .45s ease;
-      z-index: 0;
+      z-index: -1;
     }
 
-    .experience-row > * { position: relative; z-index: 1; }
-    .experience-row:hover::before { width: 8px; }
+    .experience-row:hover::before { width: 100%; }
     .date {
-      color: var(--cream);
+      color: var(--burgundy);
       font-size: 12px;
       font-weight: 800;
       letter-spacing: .12em;
@@ -518,13 +473,16 @@
       line-height: .92;
       letter-spacing: -.05em;
       margin-bottom: 12px;
-      color: var(--cream);
     }
-    .role p { font-family: var(--serif); font-style: italic; font-size: 1.35rem; color: rgba(239,239,201,.78); }
-    .experience-row .desc { color: rgba(255,253,247,.94); line-height: 1.72; font-size: 1rem; text-shadow: 0 1px 18px rgba(0,0,0,.10); }
+    .role p { font-family: var(--serif); font-style: italic; font-size: 1.35rem; color: var(--muted); }
+    .experience-row .desc { color: var(--ink-soft); line-height: 1.72; font-size: 1rem; }
 
     .work {
-      background: var(--soft-cream);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(202,209,131,.28), transparent 30rem),
+        radial-gradient(circle at 92% 18%, rgba(200,164,159,.28), transparent 34rem),
+        radial-gradient(circle at 72% 86%, rgba(100,0,23,.10), transparent 36rem),
+        linear-gradient(180deg, var(--cream) 0%, #eee5d9 45%, var(--sand) 100%);
       color: var(--ink);
     }
     .work .section-heading p, .work .eyebrow { color: var(--muted); }
@@ -547,36 +505,16 @@
       overflow: hidden;
     }
 
-    /* Project cards stay solid and readable while moving. Images are kept with the same original src paths, with colour blocks mixed across the full palette. */
-    .project-card:nth-child(1) { background: var(--cream); }
-    .project-card:nth-child(2) { background: var(--burgundy); color: var(--cream); }
-    .project-card:nth-child(3) { background: var(--sand); }
-    .project-card:nth-child(4) { background: var(--deep-olive); color: var(--cream); }
-    .project-card:nth-child(5) { background: var(--espresso); color: var(--cream); }
-
-    .project-card:nth-child(2) .project-info p,
-    .project-card:nth-child(2) .tag,
-    .project-card:nth-child(4) .project-info p,
-    .project-card:nth-child(4) .tag,
-    .project-card:nth-child(5) .project-info p,
-    .project-card:nth-child(5) .tag { color: rgba(239,239,201,.86); }
-
-    .project-card:nth-child(2) .tag,
-    .project-card:nth-child(4) .tag,
-    .project-card:nth-child(5) .tag {
-      border-color: rgba(239,239,201,.28);
-      background: rgba(239,239,201,.10);
+    .project-card:nth-child(1) { background: linear-gradient(135deg, #F3F0D2 0%, #DCE3A3 100%); }
+    .project-card:nth-child(2) { background: linear-gradient(135deg, #E7D2C0 0%, #F2E7DD 100%); }
+    .project-card:nth-child(3) { background: linear-gradient(135deg, #F0E6DC 0%, #D3AAA4 100%); }
+    .project-card:nth-child(4) { background: linear-gradient(135deg, #FFF8EA 0%, #DAC5AE 100%); }
+    .project-card:nth-child(5) {
+      background:
+        radial-gradient(circle at 14% 12%, rgba(202,209,131,.24), transparent 26rem),
+        linear-gradient(135deg, var(--deep-brown), var(--tyrian-purple));
+      color: var(--cream);
     }
-
-    .project-card:nth-child(2) .project-kicker,
-    .project-card:nth-child(4) .project-kicker,
-    .project-card:nth-child(5) .project-kicker { color: var(--cream); opacity: .88; }
-
-    .project-card:nth-child(2) .project-number,
-    .project-card:nth-child(4) .project-number,
-    .project-card:nth-child(5) .project-number { color: rgba(239,239,201,.16); }
-
-    .project-card:nth-child(5) { border-color: rgba(239,239,201,.20); }
 
     .project-card:nth-child(even) { grid-template-columns: minmax(320px, .72fr) minmax(0, .98fr); }
     .project-card:nth-child(even) .project-visual { order: 2; }
@@ -595,8 +533,8 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,.10);
-      opacity: .55;
+      background: linear-gradient(180deg, transparent 38%, rgba(0,0,0,.34));
+      opacity: .75;
       z-index: 1;
       pointer-events: none;
     }
@@ -654,6 +592,7 @@
       color: rgba(100,0,23,.16);
       margin-bottom: 24px;
     }
+    .project-card:nth-child(5) .project-number { color: rgba(239,239,201,.20); }
     .project-kicker {
       display: block;
       margin-bottom: 16px;
@@ -663,6 +602,7 @@
       letter-spacing: .14em;
       text-transform: uppercase;
     }
+    .project-card:nth-child(5) .project-kicker { color: var(--citron); }
     .project-info h3 {
       max-width: 540px;
       font-family: var(--display);
@@ -677,6 +617,7 @@
       line-height: 1.65;
       font-size: 1rem;
     }
+    .project-card:nth-child(5) .project-info p { color: rgba(239,239,201,.78); }
     .tags {
       display: flex;
       flex-wrap: wrap;
@@ -695,6 +636,11 @@
       letter-spacing: .08em;
       text-transform: uppercase;
     }
+    .project-card:nth-child(5) .tag {
+      border-color: rgba(239,239,201,.22);
+      color: rgba(239,239,201,.78);
+      background: rgba(239,239,201,.07);
+    }
 
     .archive-link {
       display: inline-flex;
@@ -709,7 +655,10 @@
     .archive-link span { border-bottom: 1px solid rgba(100,0,23,.42); }
 
     #about {
-      background: var(--ivory);
+      background:
+        radial-gradient(circle at 0% 12%, rgba(202,209,131,.32), transparent 28rem),
+        radial-gradient(circle at 100% 40%, rgba(100,0,23,.12), transparent 30rem),
+        linear-gradient(180deg, var(--cream) 0%, var(--soft-cream) 46%, var(--sand) 100%);
     }
 
     .about-grid {
@@ -724,93 +673,26 @@
       padding: clamp(22px, 3vw, 34px);
       border: 1px solid var(--line);
       border-radius: var(--radius-xl);
-      background: var(--cream);
+      background: rgba(255, 253, 247, .36);
+      backdrop-filter: blur(18px);
       overflow: hidden;
       transition: transform .35s ease, background .35s ease, border-color .35s ease;
     }
-    .bento:hover { transform: translateY(-5px); border-color: var(--line-strong); }
-    /* About section: palette is mixed across the grid, not arranged light-to-dark. */
-    .about-grid .bento:nth-child(1) {
-      background: var(--ivory);
-      border-color: rgba(88,4,16,.18);
-    }
-    .about-grid .bento:nth-child(1)::after {
-      content: "";
-      position: absolute;
-      width: 12px;
-      height: 74%;
-      right: 24px;
-      top: 13%;
-      border-radius: 999px;
-      background: var(--burgundy);
-      opacity: .92;
-    }
-    .about-grid .bento:nth-child(2) {
-      background: var(--burgundy);
-      color: var(--cream);
-      border-color: rgba(239,239,201,.22);
-    }
-    .about-grid .bento:nth-child(2) p,
-    .about-grid .bento:nth-child(2) .small-label { color: rgba(239,239,201,.86); }
-    .about-grid .bento:nth-child(2) p:last-child { color: var(--citron) !important; }
-    .about-grid .bento:nth-child(3) {
-      background: var(--sage-mist);
-      color: var(--ink);
-      border-color: rgba(90,94,39,.22);
-    }
-    .about-grid .bento:nth-child(4) {
-      background: var(--espresso);
-      color: var(--cream);
-      border-color: rgba(239,239,201,.18);
-    }
+    .bento:hover { transform: translateY(-5px); background: rgba(239,239,201,.55); border-color: var(--line-strong); }
+    .about-grid .bento:nth-child(1) { background: linear-gradient(135deg, rgba(255,253,247,.52), rgba(216,196,172,.48)); }
+    .about-grid .bento:nth-child(2) { background: var(--citron); }
+    .about-grid .bento:nth-child(3) { background: var(--dusty-pink); }
+    .about-grid .bento:nth-child(4) { background: var(--burgundy); color: var(--cream); }
     .about-grid .bento:nth-child(4) p,
     .about-grid .bento:nth-child(4) .small-label,
     .about-grid .bento:nth-child(4) .icon { color: rgba(239,239,201,.86); }
-    .about-grid .bento:nth-child(5) {
-      background: var(--cream);
-      border-color: rgba(88,4,16,.20);
-    }
-    .about-grid .bento:nth-child(7) {
-      background: var(--sand);
-      border-color: rgba(88,4,16,.18);
-    }
-    .about-grid .bento.full {
-      background: var(--cream);
-      color: var(--ink);
-      border-color: rgba(100,0,23,.22);
-    }
-    .about-grid .bento.full::before {
-      content: "";
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      right: -78px;
-      top: -96px;
-      border-radius: 999px;
-      background: var(--dusty-pink);
-      opacity: .62;
-    }
-    .about-grid .bento.full::after {
-      content: "";
-      position: absolute;
-      width: 92px;
-      height: 92px;
-      right: 120px;
-      bottom: -36px;
-      border-radius: 999px;
-      background: var(--burgundy);
-      opacity: .88;
-    }
-    .about-grid .bento.full p,
-    .about-grid .bento.full .small-label { color: var(--burgundy); }
-    .about-grid .bento.full h4 { color: var(--ink); }
-    .about-grid .bento.full .small-label { color: var(--burgundy); }
+    .about-grid .bento:nth-child(5) { background: var(--sand); }
+    .about-grid .bento:nth-child(7) { background: linear-gradient(135deg, var(--soft-cream), var(--dusty-pink)); }
+    .about-grid .bento.full { background: linear-gradient(135deg, rgba(239,239,201,.80), rgba(216,196,172,.58), rgba(200,164,159,.36)); }
     .bento.large { grid-column: span 4; min-height: 360px; }
     .bento.medium { grid-column: span 2; }
     .bento.wide { grid-column: span 3; }
     .bento.full { grid-column: span 6; min-height: 180px; }
-
-    .bento > * { position: relative; z-index: 1; }
 
     .bento h3, .bento h4 {
       font-family: var(--display);
@@ -838,30 +720,18 @@
     .bento.music {
       color: var(--cream);
       background: var(--deep-brown);
-      isolation: isolate;
     }
     .bento.music::before {
       content: "";
       position: absolute;
       inset: 0;
-      background-image: url('Spotify.PNG');
-      background-size: cover;
-      background-position: center;
-      opacity: .42;
-      transform: scale(1.03);
-      transition: transform .7s ease, opacity .35s ease;
-      z-index: -2;
+      background: linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.18)), url('Spotify.PNG') center/cover;
+      opacity: .72;
+      transition: transform .7s ease;
     }
-    .bento.music::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(9,7,7,.48);
-      z-index: -1;
-    }
-    .bento.music:hover::before { transform: scale(1.10); opacity: .55; }
+    .bento.music:hover::before { transform: scale(1.06); }
     .bento.music > * { position: relative; z-index: 1; }
-    .bento.music p { color: rgba(243,238,229,.86); }
+    .bento.music p { color: rgba(243,238,229,.78); }
 
     .tool-row {
       display: flex;
@@ -877,20 +747,16 @@
       justify-content: flex-end;
     }
     .tool-chip {
-      padding: 10px 14px;
+      padding: 10px 13px;
       border-radius: 999px;
-      border: 1px solid rgba(88,4,16,.18);
-      background: rgba(255,253,247,.58);
+      border: 1px solid var(--line);
+      background: rgba(239,239,201,.36);
       font-size: 12px;
       font-weight: 800;
       letter-spacing: .08em;
       text-transform: uppercase;
       color: var(--ink-soft);
-      box-shadow: 0 12px 30px rgba(47,27,26,.05);
     }
-    .grouped-tools .tool-chip:nth-child(2n) { background: rgba(200,164,159,.34); }
-    .grouped-tools .tool-chip:nth-child(3n) { background: rgba(196,197,160,.34); }
-    .grouped-tools .tool-chip:nth-child(4n) { background: rgba(255,253,247,.72); }
     .grouped-tools { max-width: 760px; }
     .grouped-tools .tool-chip {
       text-transform: none;
@@ -911,7 +777,10 @@
       display: flex;
       align-items: center;
       border-top: 1px solid rgba(255,255,255,.10);
-      background: var(--oxblood);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(202,209,131,.18), transparent 28rem),
+        radial-gradient(circle at 78% 44%, rgba(200,164,159,.16), transparent 30rem),
+        linear-gradient(135deg, var(--deep-brown) 0%, var(--tyrian-purple) 58%, var(--burgundy) 100%);
       color: var(--cream);
     }
     .contact .eyebrow { color: rgba(255,250,243,.68); }
@@ -1013,1114 +882,6 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
     }
-
-  /* =========================================================
-     HYBRID OVERRIDES — rose / pine / wine editorial blend
-     Combines the cleaner hero/reel/footer direction with the
-     more readable project system, solid cards, original images,
-     restored Spotify image card, and recruiter-ready toolkit.
-     ========================================================= */
-
-  :root {
-    --cream: #EEE4DA;
-    --soft-cream: #F1F0EA;
-    --ivory: #F1F0EA;
-    --paper: #EEE4DA;
-    --paper-soft: #F1F0EA;
-    --pink: #FFD9D9;
-    --cosmos: #F6BDD1;
-    --rose: #BD7880;
-    --pine: #102B1F;
-    --deep-pine: #071D15;
-    --wine: #4D0011;
-    --raspberry: #720026;
-    --sangria: #4F000B;
-    --sand: #D8C4AC;
-    --black: #111111;
-    --espresso: #2F1B1A;
-    --oxblood: #390000;
-    --ink: #151112;
-    --ink-soft: #2F1B1A;
-    --muted: #665653;
-    --citron: #C4C5A0;
-    --sage-mist: #C4C5A0;
-    --line: rgba(21, 17, 18, .15);
-    --line-strong: rgba(21, 17, 18, .30);
-  }
-
-  html,
-  body {
-    background: var(--cream);
-    color: var(--ink);
-  }
-
-  #meshCanvas {
-    opacity: .10;
-  }
-
-  .grain {
-    opacity: .09;
-    mix-blend-mode: multiply;
-  }
-
-  .nav {
-    color: var(--ink);
-    mix-blend-mode: multiply;
-  }
-
-  .nav-links {
-    background: rgba(238, 228, 218, .72);
-    border-color: rgba(21,17,18,.13);
-  }
-
-  .nav-links a:hover {
-    background: var(--wine);
-    color: var(--cream);
-  }
-
-  #cursor {
-    background: var(--wine);
-  }
-
-  #cursor.is-hovering {
-    background: rgba(255, 217, 217, .42);
-    border-color: rgba(77, 0, 17, .46);
-  }
-
-  #cursor.is-project {
-    background: var(--rose);
-    color: var(--wine);
-  }
-
-  .hero {
-    background: var(--cream);
-  }
-
-  .hero::before {
-    background: var(--pink);
-    opacity: .82;
-    border: 1px solid rgba(77,0,17,.12);
-    box-shadow: inset -80px -80px 0 rgba(189,120,128,.18);
-  }
-
-  .status-card {
-    background: var(--wine);
-    color: var(--cream);
-    border-color: rgba(238,228,218,.20);
-    box-shadow: 0 30px 90px rgba(77,0,17,.16);
-  }
-
-  .status-card p:first-child {
-    color: rgba(238,228,218,.76);
-  }
-
-  .status-card p:last-child {
-    color: var(--cream);
-  }
-
-  .status-card .dot {
-    background: var(--pink);
-    box-shadow: 0 0 0 6px rgba(255,217,217,.16);
-  }
-
-  .soft-italic {
-    color: var(--wine);
-  }
-
-  .hero-copy {
-    color: var(--ink-soft);
-  }
-
-  .capability-reel {
-    background: var(--wine);
-    color: var(--cream);
-    border-block: 0;
-  }
-
-  .reel-label {
-    color: var(--pink);
-  }
-
-  .reel-window {
-    border-top: 1px solid rgba(255,217,217,.28);
-    border-bottom: 1px solid rgba(255,217,217,.28);
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .reel-item {
-    color: var(--cream);
-  }
-
-  .reel-item em {
-    color: var(--pink);
-  }
-
-  .reel-item::after {
-    background: var(--rose);
-  }
-
-  #experience {
-    background: var(--cream);
-    border-block: 1px solid rgba(21,17,18,.10);
-  }
-
-  #experience .section-heading h2 {
-    color: var(--wine);
-  }
-
-  .experience-list {
-    border-top: 0;
-    display: grid;
-    gap: 18px;
-  }
-
-  .experience-row {
-    border: 1px solid rgba(21,17,18,.14);
-    border-radius: var(--radius-xl);
-    padding: clamp(34px, 5vw, 64px);
-    box-shadow: 0 26px 70px rgba(47,27,26,.10);
-    overflow: hidden;
-  }
-
-  .experience-row:nth-child(1) {
-    background: var(--pine);
-    color: var(--cream);
-  }
-
-  .experience-row:nth-child(2) {
-    background: var(--wine);
-    color: var(--cream);
-  }
-
-  .experience-row:nth-child(1)::after,
-  .experience-row:nth-child(2)::after {
-    content: "";
-    position: absolute;
-    right: clamp(22px, 4vw, 58px);
-    top: clamp(24px, 4vw, 54px);
-    width: clamp(96px, 11vw, 160px);
-    aspect-ratio: 1;
-    border-radius: 999px;
-    background: transparent;
-    border: 1px solid rgba(238,228,218,.32);
-    opacity: .76;
-    pointer-events: none;
-  }
-
-  .experience-row:nth-child(1)::before,
-  .experience-row:nth-child(2)::before {
-    content: "";
-    position: absolute;
-    left: auto;
-    right: clamp(82px, 10vw, 150px);
-    top: clamp(98px, 10vw, 142px);
-    width: clamp(58px, 7vw, 98px);
-    aspect-ratio: 1;
-    border-radius: 999px;
-    background: var(--rose);
-    opacity: .72;
-    transition: transform .45s ease, opacity .45s ease;
-    z-index: 0;
-  }
-
-  .experience-row:nth-child(2)::before {
-    background: var(--pink);
-    opacity: .20;
-  }
-
-  .experience-row:hover::before {
-    transform: translate(-10px, -6px) scale(1.05);
-  }
-
-  .experience-row > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .date,
-  .experience-row:nth-child(1) .date,
-  .experience-row:nth-child(2) .date {
-    color: var(--pink);
-  }
-
-  .role h3,
-  .role p,
-  .experience-row .desc {
-    color: var(--cream);
-  }
-
-  .role p,
-  .experience-row:nth-child(1) .role p,
-  .experience-row:nth-child(2) .role p {
-    color: rgba(238,228,218,.78);
-  }
-
-  .experience-row .desc {
-    color: rgba(238,228,218,.92);
-  }
-
-  .work {
-    background: var(--ivory);
-    color: var(--ink);
-  }
-
-  .work .section-heading h2 {
-    color: var(--wine);
-  }
-
-  .project-card {
-    border-color: rgba(21,17,18,.16);
-    box-shadow: 0 34px 90px rgba(47,27,26,.14);
-  }
-
-  .project-card:nth-child(1) {
-    background: var(--pink);
-    color: var(--pine);
-  }
-
-  .project-card:nth-child(2) {
-    background: var(--cream);
-    color: var(--ink);
-  }
-
-  .project-card:nth-child(3) {
-    background: var(--rose);
-    color: var(--pine);
-  }
-
-  .project-card:nth-child(4) {
-    background: var(--pine);
-    color: var(--cream);
-  }
-
-  .project-card:nth-child(5) {
-    background: var(--wine);
-    color: var(--cream);
-  }
-
-  .project-card:nth-child(1) .project-kicker,
-  .project-card:nth-child(2) .project-kicker,
-  .project-card:nth-child(3) .project-kicker {
-    color: var(--wine);
-  }
-
-  .project-card:nth-child(4) .project-kicker,
-  .project-card:nth-child(5) .project-kicker {
-    color: var(--pink);
-  }
-
-  .project-card:nth-child(4) .project-info p,
-  .project-card:nth-child(5) .project-info p,
-  .project-card:nth-child(4) .tag,
-  .project-card:nth-child(5) .tag {
-    color: rgba(238,228,218,.86);
-  }
-
-  .project-card:nth-child(4) .tag,
-  .project-card:nth-child(5) .tag {
-    background: rgba(238,228,218,.08);
-    border-color: rgba(238,228,218,.22);
-  }
-
-  .project-card:nth-child(1) .project-number,
-  .project-card:nth-child(2) .project-number,
-  .project-card:nth-child(3) .project-number {
-    color: rgba(77,0,17,.14);
-  }
-
-  .project-card:nth-child(4) .project-number,
-  .project-card:nth-child(5) .project-number {
-    color: rgba(238,228,218,.18);
-  }
-
-  .project-visual {
-    background: var(--black);
-  }
-
-  .project-visual::after {
-    background: rgba(0,0,0,.10);
-    opacity: .55;
-  }
-
-  .project-link {
-    background: rgba(238,228,218,.88);
-    color: var(--wine);
-  }
-
-  .archive-link {
-    color: var(--wine);
-  }
-
-  #about {
-    background: var(--cream);
-  }
-
-  .about-grid .bento {
-    backdrop-filter: none;
-    border-color: rgba(21,17,18,.14);
-    box-shadow: 0 18px 45px rgba(47,27,26,.06);
-  }
-
-  .about-grid .bento:nth-child(1) {
-    background: var(--cream);
-    color: var(--ink);
-    border-color: rgba(21,17,18,.16);
-  }
-
-  .about-grid .bento:nth-child(1)::after {
-    width: 0;
-    background: transparent;
-  }
-
-  .about-grid .bento:nth-child(2) {
-    background: var(--wine);
-    color: var(--cream);
-    border-color: rgba(238,228,218,.18);
-  }
-
-  .about-grid .bento:nth-child(2) p,
-  .about-grid .bento:nth-child(2) .small-label {
-    color: rgba(238,228,218,.82);
-  }
-
-  .about-grid .bento:nth-child(2) p:last-child {
-    color: var(--pink) !important;
-  }
-
-  .about-grid .bento:nth-child(3) {
-    background: var(--rose);
-    color: var(--pine);
-    border-color: rgba(77,0,17,.18);
-  }
-
-  .about-grid .bento:nth-child(4) {
-    background: var(--pine);
-    color: var(--cream);
-    border-color: rgba(238,228,218,.18);
-  }
-
-  .about-grid .bento:nth-child(4) p,
-  .about-grid .bento:nth-child(4) .small-label,
-  .about-grid .bento:nth-child(4) .icon {
-    color: rgba(238,228,218,.86);
-  }
-
-  .about-grid .bento:nth-child(5) {
-    background: var(--sand);
-    color: var(--ink);
-    border-color: rgba(77,0,17,.15);
-  }
-
-  .about-grid .bento.music {
-    background: var(--black);
-    color: var(--cream);
-  }
-
-  .bento.music::before {
-    background-image: url('Spotify.PNG');
-    background-size: cover;
-    background-position: center;
-    opacity: .46;
-  }
-
-  .bento.music::after {
-    background: rgba(17,17,17,.50);
-  }
-
-  .about-grid .bento:nth-child(7) {
-    background: var(--pink);
-    color: var(--pine);
-    border-color: rgba(77,0,17,.12);
-  }
-
-  .about-grid .bento:nth-child(7)::before {
-    content: "";
-    position: absolute;
-    right: -50px;
-    bottom: -58px;
-    width: 160px;
-    height: 160px;
-    border-radius: 999px;
-    border: 1px solid rgba(77,0,17,.22);
-  }
-
-  .about-grid .bento.full {
-    background: var(--cream);
-    color: var(--ink);
-    border-color: rgba(77,0,17,.16);
-  }
-
-  .about-grid .bento.full::before {
-    background: var(--pink);
-    opacity: .58;
-  }
-
-  .about-grid .bento.full::after {
-    background: var(--rose);
-    opacity: .78;
-  }
-
-  .bento .small-label,
-  .bento .icon {
-    color: var(--wine);
-  }
-
-  .bento h3,
-  .bento h4 {
-    color: inherit;
-  }
-
-  .bento p {
-    color: currentColor;
-  }
-
-  .tool-chip {
-    background: rgba(255,217,217,.34);
-    border-color: rgba(77,0,17,.14);
-    color: var(--ink-soft);
-  }
-
-  .grouped-tools .tool-chip:nth-child(2n) {
-    background: rgba(238,228,218,.78);
-  }
-
-  .grouped-tools .tool-chip:nth-child(3n) {
-    background: rgba(189,120,128,.24);
-  }
-
-  .grouped-tools .tool-chip:nth-child(4n) {
-    background: rgba(255,217,217,.48);
-  }
-
-  .grouped-tools .tool-chip strong {
-    color: var(--wine);
-  }
-
-  .contact {
-    background: var(--wine);
-    color: var(--cream);
-  }
-
-  .contact h2 em,
-  .email-link:hover {
-    color: var(--pink);
-  }
-
-  .socials a:hover {
-    background: var(--pink);
-    color: var(--wine);
-  }
-
-  @media (max-width: 980px) {
-    .hero::before {
-      opacity: .35;
-      right: -34vw;
-    }
-
-    .status-card {
-      background: var(--cream);
-      color: var(--ink);
-    }
-
-    .status-card p:last-child {
-      color: var(--ink-soft);
-    }
-
-    .experience-row:nth-child(1)::after,
-    .experience-row:nth-child(2)::after,
-    .experience-row:nth-child(1)::before,
-    .experience-row:nth-child(2)::before {
-      display: none;
-    }
-  }
-
-
-
-  /* --- Final balance pass: keep the hero/reel/footer, improve contrast, and stop the lower sections from feeling light-to-dark. --- */
-  :root {
-    --gold: #EFEFC9;
-    --soft-gold: #F7F0C7;
-    --rose-soft: #BD7880;
-    --rose-light: #FFD9D9;
-    --wine-deep: #4D0011;
-    --pine-deep: #102B1F;
-    --warm-cream: #EEE4DA;
-    --deep-black: #111111;
-  }
-
-  .hero::before {
-    background: var(--wine-deep);
-    opacity: .94;
-    border: 1px solid rgba(238, 228, 218, .14);
-    box-shadow: none;
-  }
-
-  .hero-card-stack {
-    align-self: start;
-    justify-self: end;
-    width: min(100%, 390px);
-    display: grid;
-    gap: 16px;
-  }
-
-  .hero-card-stack .status-card {
-    width: 100%;
-    background: var(--gold);
-    color: var(--ink);
-    border-color: rgba(77, 0, 17, .18);
-    box-shadow: 0 28px 70px rgba(77, 0, 17, .18);
-  }
-
-  .hero-card-stack .status-card p:first-child { color: rgba(22,17,17,.64); }
-  .hero-card-stack .status-card p:last-child { color: var(--ink); }
-
-  .hero-focus-card {
-    min-height: 170px;
-    padding: 24px;
-    border-radius: 26px;
-    background: var(--pine-deep);
-    color: var(--gold);
-    border: 1px solid rgba(239, 239, 201, .18);
-    box-shadow: 0 26px 70px rgba(16, 43, 31, .16);
-  }
-
-  .hero-focus-card .mini-label {
-    margin-bottom: 18px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: rgba(239,239,201,.68);
-  }
-
-  .hero-focus-card p:last-child {
-    font-family: var(--serif);
-    font-size: clamp(1.35rem, 2vw, 1.85rem);
-    line-height: 1.08;
-  }
-
-  .hero-focus-card strong {
-    font-family: var(--body);
-    font-size: .82em;
-    letter-spacing: .02em;
-    text-transform: uppercase;
-    color: var(--rose-light);
-  }
-
-  /* Experience: mixed palette, readable contrast, no pine takeover. */
-  .experience-row:nth-child(1) {
-    background: var(--rose-soft);
-    color: var(--wine-deep);
-    border-color: rgba(77, 0, 17, .20);
-  }
-
-  .experience-row:nth-child(2) {
-    background: var(--wine-deep);
-    color: var(--gold);
-    border-color: rgba(239, 239, 201, .18);
-  }
-
-  .experience-row:nth-child(1)::before { background: var(--gold); opacity: .42; }
-  .experience-row:nth-child(1)::after { border-color: rgba(77,0,17,.24); }
-  .experience-row:nth-child(2)::before { background: var(--rose-light); opacity: .18; }
-  .experience-row:nth-child(2)::after { border-color: rgba(239,239,201,.25); }
-
-  .experience-row:nth-child(1) .date,
-  .experience-row:nth-child(1) .role h3,
-  .experience-row:nth-child(1) .role p,
-  .experience-row:nth-child(1) .desc { color: var(--wine-deep); }
-
-  .experience-row:nth-child(1) .role p { color: rgba(77,0,17,.70); }
-  .experience-row:nth-child(1) .desc { color: rgba(22,17,17,.84); }
-
-  .experience-row:nth-child(2) .date { color: var(--rose-light); }
-  .experience-row:nth-child(2) .role h3 { color: var(--gold); }
-  .experience-row:nth-child(2) .role p,
-  .experience-row:nth-child(2) .desc { color: rgba(239,239,201,.88); }
-
-  /* Projects: alternate contrast instead of drifting from light to dark. This also fixes GEN CIU text contrast. */
-  .project-card:nth-child(1) {
-    background: var(--warm-cream);
-    color: var(--ink);
-  }
-
-  .project-card:nth-child(2) {
-    background: var(--pine-deep);
-    color: var(--gold);
-    border-color: rgba(239,239,201,.20);
-  }
-
-  .project-card:nth-child(3) {
-    background: var(--rose-light);
-    color: var(--wine-deep);
-  }
-
-  .project-card:nth-child(4) {
-    background: var(--wine-deep);
-    color: var(--gold);
-    border-color: rgba(239,239,201,.20);
-  }
-
-  .project-card:nth-child(5) {
-    background: var(--deep-black);
-    color: var(--gold);
-    border-color: rgba(239,239,201,.18);
-  }
-
-  .project-card:nth-child(1) .project-kicker,
-  .project-card:nth-child(3) .project-kicker { color: var(--wine-deep); }
-
-  .project-card:nth-child(2) .project-kicker,
-  .project-card:nth-child(4) .project-kicker,
-  .project-card:nth-child(5) .project-kicker { color: var(--rose-light); }
-
-  .project-card:nth-child(1) .project-number,
-  .project-card:nth-child(3) .project-number { color: rgba(77,0,17,.13); }
-
-  .project-card:nth-child(2) .project-number,
-  .project-card:nth-child(4) .project-number,
-  .project-card:nth-child(5) .project-number { color: rgba(239,239,201,.18); }
-
-  .project-card:nth-child(1) .project-info h3,
-  .project-card:nth-child(1) .project-info p,
-  .project-card:nth-child(1) .tag,
-  .project-card:nth-child(3) .project-info h3,
-  .project-card:nth-child(3) .project-info p,
-  .project-card:nth-child(3) .tag {
-    color: var(--ink);
-  }
-
-  .project-card:nth-child(2) .project-info h3,
-  .project-card:nth-child(4) .project-info h3,
-  .project-card:nth-child(5) .project-info h3 {
-    color: var(--gold);
-  }
-
-  .project-card:nth-child(2) .project-info p,
-  .project-card:nth-child(4) .project-info p,
-  .project-card:nth-child(5) .project-info p {
-    color: rgba(239,239,201,.88) !important;
-  }
-
-  .project-card:nth-child(2) .tag,
-  .project-card:nth-child(4) .tag,
-  .project-card:nth-child(5) .tag {
-    color: rgba(239,239,201,.88) !important;
-    background: rgba(239,239,201,.09);
-    border-color: rgba(239,239,201,.24);
-  }
-
-  .project-card:nth-child(1) .tag,
-  .project-card:nth-child(3) .tag {
-    background: rgba(255,253,247,.58);
-    border-color: rgba(77,0,17,.16);
-  }
-
-  .project-visual::after {
-    background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.20));
-    opacity: .62;
-  }
-
-  /* About: keep the editorial cards, but use pine as a single intentional moment instead of a whole-site colour. */
-  .about-grid .bento:nth-child(1) { background: var(--warm-cream); color: var(--ink); }
-  .about-grid .bento:nth-child(2) { background: var(--wine-deep); color: var(--gold); }
-  .about-grid .bento:nth-child(3) { background: var(--rose-soft); color: var(--pine-deep); }
-  .about-grid .bento:nth-child(4) { background: var(--espresso); color: var(--gold); }
-  .about-grid .bento:nth-child(5) { background: var(--gold); color: var(--wine-deep); }
-  .about-grid .bento:nth-child(7) { background: var(--rose-light); color: var(--pine-deep); }
-  .about-grid .bento.full { background: var(--gold); color: var(--ink); }
-
-  .about-grid .bento:nth-child(2) p,
-  .about-grid .bento:nth-child(2) .small-label,
-  .about-grid .bento:nth-child(4) p,
-  .about-grid .bento:nth-child(4) .small-label,
-  .about-grid .bento:nth-child(4) .icon { color: rgba(239,239,201,.86); }
-
-  .about-grid .bento:nth-child(2) p:last-child { color: var(--rose-light) !important; }
-
-  @media (max-width: 980px) {
-    .hero-card-stack {
-      justify-self: start;
-      order: -1;
-      width: min(100%, 520px);
-    }
-    .hero-focus-card { min-height: auto; }
-    .project-card:nth-child(2),
-    .project-card:nth-child(4),
-    .project-card:nth-child(5) { color: var(--gold); }
-  }
-
-
-  /* =========================================================
-     TARGETED HERO FIX — two-card composition, not stacked cards
-     Keeps the rest of the uploaded reference colours and sections intact.
-     ========================================================= */
-
-  .hero::before {
-    display: none;
-  }
-
-  .hero-grid {
-    grid-template-columns: minmax(0, .94fr) minmax(390px, .68fr);
-    align-items: center;
-  }
-
-  .hero-visual {
-    position: relative;
-    align-self: center;
-    justify-self: end;
-    width: min(100%, 560px);
-    min-height: min(52vh, 440px);
-  }
-
-  .hero-plate {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: min(100%, 520px);
-    height: min(42vh, 360px);
-    border-radius: 34px;
-    background: var(--wine-deep);
-    border: 1px solid rgba(238, 228, 218, .14);
-    box-shadow: 0 34px 90px rgba(77, 0, 17, .13);
-    overflow: hidden;
-  }
-
-  .hero-plate::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
-    opacity: .20;
-    mix-blend-mode: soft-light;
-  }
-
-  .hero-visual .status-card {
-    position: absolute;
-    top: 28px;
-    right: -34px;
-    width: min(360px, 86%);
-    background: var(--gold);
-    color: var(--ink);
-    border-color: rgba(77, 0, 17, .18);
-    box-shadow: 0 28px 70px rgba(77, 0, 17, .18);
-    z-index: 2;
-  }
-
-  .hero-visual .status-card p:first-child {
-    color: rgba(22, 17, 17, .64);
-  }
-
-  .hero-visual .status-card p:last-child {
-    color: var(--ink);
-  }
-
-  .hero-visual .status-card .dot {
-    background: var(--pine-deep);
-    box-shadow: 0 0 0 6px rgba(16, 43, 31, .10);
-  }
-
-  @media (max-width: 1180px) {
-    .hero-visual .status-card { right: 0; }
-  }
-
-  @media (max-width: 980px) {
-    .hero-grid { grid-template-columns: 1fr; }
-    .hero-visual {
-      order: -1;
-      justify-self: stretch;
-      width: 100%;
-      min-height: 300px;
-      margin-top: 22px;
-    }
-    .hero-plate {
-      width: 100%;
-      height: 250px;
-    }
-    .hero-visual .status-card {
-      top: 24px;
-      right: 18px;
-      width: min(360px, calc(100% - 36px));
-    }
-  }
-
-  @media (max-width: 620px) {
-    .hero-visual { min-height: 260px; }
-    .hero-plate { height: 220px; border-radius: 24px; }
-    .hero-visual .status-card {
-      top: 18px;
-      right: 14px;
-      width: calc(100% - 28px);
-      border-radius: 22px;
-    }
-  }
-
-
-  /* --- Targeted experience colour correction: keep the two-card hero and all other sections unchanged. --- */
-  .experience-row:nth-child(1) {
-    background: var(--pine-deep) !important;
-    color: var(--gold) !important;
-    border-color: rgba(239, 239, 201, .20) !important;
-  }
-
-  .experience-row:nth-child(2) {
-    background: var(--wine-deep) !important;
-    color: var(--gold) !important;
-    border-color: rgba(239, 239, 201, .18) !important;
-  }
-
-  .experience-row:nth-child(1)::before {
-    background: var(--rose-light) !important;
-    opacity: .18 !important;
-  }
-
-  .experience-row:nth-child(1)::after {
-    border-color: rgba(239, 239, 201, .28) !important;
-  }
-
-  .experience-row:nth-child(2)::before {
-    background: var(--rose-light) !important;
-    opacity: .18 !important;
-  }
-
-  .experience-row:nth-child(2)::after {
-    border-color: rgba(239, 239, 201, .25) !important;
-  }
-
-  .experience-row:nth-child(1) .date,
-  .experience-row:nth-child(2) .date {
-    color: var(--rose-light) !important;
-  }
-
-  .experience-row:nth-child(1) .role h3,
-  .experience-row:nth-child(2) .role h3 {
-    color: var(--gold) !important;
-  }
-
-  .experience-row:nth-child(1) .role p,
-  .experience-row:nth-child(1) .desc,
-  .experience-row:nth-child(2) .role p,
-  .experience-row:nth-child(2) .desc {
-    color: rgba(239, 239, 201, .88) !important;
-  }
-
-
-  /* --- Targeted fix: hero two-card placement + About middle-card colour balance only. --- */
-  @media (min-width: 981px) {
-    .hero {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-grid {
-      grid-template-columns: minmax(0, 1fr) !important;
-      align-items: center !important;
-    }
-
-    .hero-visual {
-      position: absolute !important;
-      right: clamp(18px, 4vw, 72px) !important;
-      top: clamp(108px, 14vh, 150px) !important;
-      width: min(42vw, 560px) !important;
-      min-height: min(48vh, 440px) !important;
-      align-self: auto !important;
-      justify-self: auto !important;
-      z-index: 0;
-    }
-
-    .hero-plate {
-      position: absolute !important;
-      right: 0 !important;
-      top: clamp(34px, 5vh, 58px) !important;
-      bottom: auto !important;
-      width: min(100%, 520px) !important;
-      height: min(43vh, 360px) !important;
-      border-radius: 34px;
-      background: var(--wine-deep) !important;
-    }
-
-    .hero-visual .status-card {
-      position: absolute !important;
-      top: 0 !important;
-      right: clamp(-36px, -2.2vw, -18px) !important;
-      width: min(370px, 82%) !important;
-      background: var(--gold) !important;
-      color: var(--ink) !important;
-      z-index: 2;
-    }
-  }
-
-  /* Keep Momentum + KenGen as the preferred experience pairing. */
-  .experience-row:nth-child(1) {
-    background: var(--pine-deep) !important;
-    color: var(--gold) !important;
-    border-color: rgba(239, 239, 201, .20) !important;
-  }
-
-  .experience-row:nth-child(2) {
-    background: var(--wine-deep) !important;
-    color: var(--gold) !important;
-    border-color: rgba(239, 239, 201, .18) !important;
-  }
-
-  .experience-row:nth-child(1) .date,
-  .experience-row:nth-child(2) .date { color: var(--rose-light) !important; }
-  .experience-row:nth-child(1) .role h3,
-  .experience-row:nth-child(2) .role h3 { color: var(--gold) !important; }
-  .experience-row:nth-child(1) .role p,
-  .experience-row:nth-child(1) .desc,
-  .experience-row:nth-child(2) .role p,
-  .experience-row:nth-child(2) .desc { color: rgba(239, 239, 201, .88) !important; }
-
-  /* About middle cards only: calmer location card + intentional pine detective card. */
-  .about-grid .bento:nth-child(3) {
-    background: var(--gold) !important;
-    color: var(--wine-deep) !important;
-    border-color: rgba(77, 0, 17, .16) !important;
-  }
-
-  .about-grid .bento:nth-child(3) .small-label,
-  .about-grid .bento:nth-child(3) .icon {
-    color: var(--wine-deep) !important;
-  }
-
-  .about-grid .bento:nth-child(3) p,
-  .about-grid .bento:nth-child(3) h4 {
-    color: var(--wine-deep) !important;
-  }
-
-  .about-grid .bento:nth-child(4) {
-    background: var(--pine-deep) !important;
-    color: var(--gold) !important;
-    border-color: rgba(239, 239, 201, .18) !important;
-  }
-
-  .about-grid .bento:nth-child(4) .small-label,
-  .about-grid .bento:nth-child(4) .icon,
-  .about-grid .bento:nth-child(4) p,
-  .about-grid .bento:nth-child(4) h4 {
-    color: rgba(239, 239, 201, .88) !important;
-  }
-
-
-  /* =========================================================
-     FINAL TARGETED REFINEMENT — only requested fixes
-     - tighten the hero two-card composition without changing the rest
-     - make About middle colours intentional
-     - keep KenGen as wine/gold, Momentum as pine/gold
-     - alternate project card contrast for mostly dark screenshots
-     ========================================================= */
-
-  @media (min-width: 981px) {
-    .hero-visual {
-      width: min(38vw, 500px) !important;
-      min-height: min(45vh, 390px) !important;
-      right: clamp(28px, 5vw, 84px) !important;
-      top: clamp(120px, 15vh, 160px) !important;
-    }
-
-    .hero-plate {
-      width: min(100%, 455px) !important;
-      height: min(38vh, 318px) !important;
-      border-radius: 32px !important;
-      background: var(--wine-deep) !important;
-      box-shadow: 0 34px 90px rgba(77, 0, 17, .14) !important;
-    }
-
-    .hero-visual .status-card {
-      width: min(342px, 78%) !important;
-      top: clamp(4px, 1.4vh, 18px) !important;
-      right: clamp(-28px, -1.6vw, -14px) !important;
-      border-radius: 24px !important;
-      background: var(--gold) !important;
-    }
-  }
-
-  /* About middle-card colour correction: the old rose + espresso pair felt muddy and disconnected beside the cream/gold card. */
-  .about-grid .bento:nth-child(3) {
-    background: var(--rose-light) !important;
-    color: var(--wine-deep) !important;
-    border-color: rgba(77, 0, 17, .16) !important;
-  }
-
-  .about-grid .bento:nth-child(3) .small-label,
-  .about-grid .bento:nth-child(3) .icon,
-  .about-grid .bento:nth-child(3) h4,
-  .about-grid .bento:nth-child(3) p {
-    color: var(--wine-deep) !important;
-  }
-
-  .about-grid .bento:nth-child(4) {
-    background: var(--pine-deep) !important;
-    color: var(--gold) !important;
-    border-color: rgba(239, 239, 201, .18) !important;
-  }
-
-  .about-grid .bento:nth-child(4) .small-label,
-  .about-grid .bento:nth-child(4) .icon,
-  .about-grid .bento:nth-child(4) h4,
-  .about-grid .bento:nth-child(4) p {
-    color: rgba(239, 239, 201, .90) !important;
-  }
-
-  /* Experience pairing kept exactly as requested. */
-  .experience-row:nth-child(1) {
-    background: var(--pine-deep) !important;
-    color: var(--gold) !important;
-  }
-
-  .experience-row:nth-child(2) {
-    background: var(--wine-deep) !important;
-    color: var(--gold) !important;
-  }
-
-  /* Project contrast rhythm: light/dark/light/dark/light so black-heavy screenshots remain readable. */
-  .project-card:nth-child(1) { background: var(--warm-cream) !important; color: var(--ink) !important; }
-  .project-card:nth-child(2) { background: var(--pine-deep) !important; color: var(--gold) !important; }
-  .project-card:nth-child(3) { background: var(--gold) !important; color: var(--wine-deep) !important; }
-  .project-card:nth-child(4) { background: var(--wine-deep) !important; color: var(--gold) !important; }
-  .project-card:nth-child(5) { background: var(--rose-light) !important; color: var(--wine-deep) !important; }
-
-  .project-card:nth-child(2) .project-info h3,
-  .project-card:nth-child(2) .project-kicker,
-  .project-card:nth-child(2) .project-info p,
-  .project-card:nth-child(2) .tag,
-  .project-card:nth-child(4) .project-info h3,
-  .project-card:nth-child(4) .project-kicker,
-  .project-card:nth-child(4) .project-info p,
-  .project-card:nth-child(4) .tag {
-    color: rgba(239, 239, 201, .90) !important;
-  }
-
-  .project-card:nth-child(1) .project-info h3,
-  .project-card:nth-child(1) .project-kicker,
-  .project-card:nth-child(1) .project-info p,
-  .project-card:nth-child(1) .tag,
-  .project-card:nth-child(3) .project-info h3,
-  .project-card:nth-child(3) .project-kicker,
-  .project-card:nth-child(3) .project-info p,
-  .project-card:nth-child(3) .tag,
-  .project-card:nth-child(5) .project-info h3,
-  .project-card:nth-child(5) .project-kicker,
-  .project-card:nth-child(5) .project-info p,
-  .project-card:nth-child(5) .tag {
-    color: var(--wine-deep) !important;
-  }
-
-  .project-card:nth-child(2) .tag,
-  .project-card:nth-child(4) .tag {
-    background: rgba(239, 239, 201, .10) !important;
-    border-color: rgba(239, 239, 201, .24) !important;
-  }
-
-  .project-card:nth-child(1) .tag,
-  .project-card:nth-child(3) .tag,
-  .project-card:nth-child(5) .tag {
-    background: rgba(255, 253, 247, .56) !important;
-    border-color: rgba(77, 0, 17, .16) !important;
-  }
-
   </style>
 </head>
 <body>
@@ -2157,12 +918,9 @@
           
         </div>
 
-        <aside class="hero-visual reveal" aria-label="Current focus">
-          <div class="hero-plate" aria-hidden="true"></div>
-          <div class="status-card hover-trigger">
-            <p><span class="dot"></span>Currently</p>
-            <p>Designing interfaces with a developer’s logic, a security mindset, and a creative eye.</p>
-          </div>
+        <aside class="status-card reveal">
+          <p><span class="dot"></span>Currently</p>
+          <p>Designing interfaces with a developer’s logic, a security mindset, and a creative eye.</p>
         </aside>
       </div>
     </section>
@@ -2215,7 +973,7 @@
               <h3>Collaborative Software Dev</h3>
               <p>KenGen ICT Attachment</p>
             </div>
-            <p class="desc">Co-engineered a full-stack Procurement Planning System that automated budget tracking, supported compliance, and reduced manual Excel-based processes. Supported approximately 500 monthly ICT tickets while gaining hands-on exposure to security workflows including Cisco Duo authentication, Microsoft LAPS, access control checks, and IT security walkthroughs.</p>
+            <p class="desc">Co-engineered a full-stack Procurement Planning System that automated budget tracking, supported compliance, and reduced manual Excel-based processes. Resolved approximately 500 monthly support tickets and participated in IT security walkthroughs covering Cisco Duo authentication and Microsoft LAPS.</p>
           </article>
         </div>
       </div>
@@ -2228,7 +986,7 @@
             <p class="eyebrow reveal">Selected Works</p>
             <h2 class="split-title">Projects with purpose.</h2>
           </div>
-          <p class="reveal">A curated set of software, security, creative, and machine learning projects — each built around a user problem, from privacy awareness and token-entry simulation to forecasting and communication practice.</p>
+          <p class="reveal">A curated set of software, security, creative, and machine learning projects — presented with more space, stronger visual hierarchy, and smoother scroll-led movement.</p>
         </div>
 
         <div class="project-stack">
@@ -2245,7 +1003,7 @@
                 <div class="project-number">01</div>
                 <span class="project-kicker">Privacy Awareness App</span>
                 <h3>Cookies To Breaches</h3>
-                <p>An interactive privacy-awareness experience that helps users understand how browser cookies, tracking behaviour, and exposed data can connect to real security risks. Users can explore a breach simulation and visual data map to see privacy concepts more clearly.</p>
+                <p>Designed and developed an interactive web application to educate users on digital privacy, specifically tracking how browser cookies can lead to security breaches. Engineered distinct modules including a "Breach Simulation" and visual data mapping.</p>
               </div>
               <div class="tags"><span class="tag">JavaScript</span><span class="tag">HTML/CSS</span><span class="tag">Simulation</span></div>
             </div>
@@ -2264,7 +1022,7 @@
                 <div class="project-number">02</div>
                 <span class="project-kicker">Utility Web App</span>
                 <h3>GEN CIU</h3>
-                <p>A token-entry simulation that helps prepaid electricity users understand how remote token submission could work without needing physical access to a Customer Interface Unit. The app guides users through token input, validation feedback, and meter-status flow.</p>
+                <p>Created and designed a CIU-Free token entry web application to simulate prepaid electricity token entry without using a physical Customer Interface Unit, helping users to input tokens remotely.</p>
               </div>
               <div class="tags"><span class="tag">JavaScript</span><span class="tag">Firebase</span><span class="tag">IoT Concept</span></div>
             </div>
@@ -2283,7 +1041,7 @@
                 <div class="project-number">03</div>
                 <span class="project-kicker">Creative Platform</span>
                 <h3>Artsy Realm</h3>
-                <p>A gallery-style platform where visitors can browse photography and artwork in a clean digital space. The experience focuses on presenting creative work clearly while supporting flexible media and artist content management.</p>
+                <p>A dynamic platform showcasing photography and artwork from various artists. Built utilizing a NoSQL database architecture to handle flexible content management and media display seamlessly.</p>
               </div>
               <div class="tags"><span class="tag">MongoDB</span><span class="tag">Express</span><span class="tag">CSS</span></div>
             </div>
@@ -2302,14 +1060,14 @@
                 <div class="project-number">04</div>
                 <span class="project-kicker">Machine Learning</span>
                 <h3>Sales Forecasting App</h3>
-                <p>A forecasting tool that helps users explore historical sales data, view patterns, and generate future sales predictions through a simple Streamlit interface powered by machine learning.</p>
+                <p>A Python-based predictive application deployed on Streamlit. Utilizes historical datasets and machine learning algorithms to map and accurately forecast future sales trends.</p>
               </div>
               <div class="tags"><span class="tag">Python</span><span class="tag">Streamlit</span><span class="tag">Scikit-Learn</span></div>
             </div>
           </article>
 
           <article class="project-card project-trigger">
-            <div class="project-visual" style="background: var(--black); display:grid; place-items:center;">
+            <div class="project-visual" style="background: linear-gradient(135deg, rgba(233,75,146,.34), rgba(125,77,255,.28), rgba(201,65,59,.18)), #211d19; display:grid; place-items:center;">
               <div style="width:min(78%,620px); aspect-ratio: 1.45/1; border:1px solid rgba(243,238,229,.2); border-radius:30px; background:rgba(255,250,240,.08); display:grid; place-items:center; padding:36px; text-align:center;">
                 <p style="font-family:var(--serif); font-style:italic; font-size:clamp(2.2rem,5vw,5.8rem); line-height:.9; color:var(--paper);">In active architecture</p>
               </div>
@@ -2319,7 +1077,7 @@
                 <div class="project-number">05</div>
                 <span class="project-kicker">Active Architecture</span>
                 <h3>Articulate</h3>
-                <p>An AI-powered speaking and articulation practice platform for students and early-career professionals who want to build confidence, structure their thoughts, and improve how they communicate in presentations, interviews, and everyday conversations.</p>
+                <p>A full-stack AI-powered articulation and coaching platform. Integrating Next.js, FastAPI, and Python to bridge analytical backend infrastructure with intuitive frontend mechanics.</p>
               </div>
               <div class="tags"><span class="tag">Next.js</span><span class="tag">FastAPI</span><span class="tag">Python</span><span class="tag">In Development</span></div>
             </div>
@@ -2353,7 +1111,7 @@
             <span class="small-label">Research & Writing</span>
             <h4>Neurodiversity & Tech</h4>
             <p>Exploring the nuances of the mind and actively navigating the double empathy problem through my writing.</p>
-            <p style="margin-top:28px; font-weight:800; color:inherit;">Read on Substack →</p>
+            <p style="margin-top:28px; font-weight:800; color:var(--ink);">Read on Substack →</p>
           </a>
 
           <article class="bento medium hover-trigger">
@@ -2582,9 +1340,9 @@
       particles = Array.from({ length: count }, (_, i) => ({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
-        r: Math.random() * 2.5 + 1.2,
-        vx: (Math.random() - .5) * .22,
-        vy: (Math.random() - .5) * .22,
+        r: Math.random() * 140 + 60,
+        vx: (Math.random() - .5) * .18,
+        vy: (Math.random() - .5) * .18,
         hue: i % 4
       }));
     }
@@ -2592,10 +1350,10 @@
     function drawMesh() {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
       const palette = [
-        'rgba(189,120,128,.09)',
-        'rgba(77,0,17,.065)',
-        'rgba(16,43,31,.075)',
-        'rgba(255,217,217,.10)'
+        'rgba(202,209,131,.18)',
+        'rgba(200,164,159,.16)',
+        'rgba(100,0,23,.10)',
+        'rgba(102,2,60,.10)'
       ];
 
       particles.forEach((p) => {
@@ -2608,7 +1366,10 @@
         if (p.y < -p.r) p.y = window.innerHeight + p.r;
         if (p.y > window.innerHeight + p.r) p.y = -p.r;
 
-        ctx.fillStyle = palette[p.hue];
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        gradient.addColorStop(0, palette[p.hue]);
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Patience Muinde | Software. Security. Design. </title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- Core & Typography --- */
+        :root {
+            --bg-color: #050505;
+            --text-color: #f3f4f6;
+            --accent-primary: #6366f1; /* Indigo */
+            --accent-secondary: #d946ef; /* Fuchsia */
+            --cursor-size: 15px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            cursor: none; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .display-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* --- Custom Cursor --- */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            background-color: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000; 
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s, opacity 0.2s, box-shadow 0.3s;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.4); 
+            opacity: 0; 
+        }
+
+        #cursor.hovered {
+            width: 35px; 
+            height: 35px; 
+            background-color: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.8); 
+            backdrop-filter: blur(1px);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+        }
+
+        /* --- Original Noise Overlay Texture --- */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- Original Ambient Gradient Blobs --- */
+        .blob-cont {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.8;
+            animation: float 20s infinite alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--accent-primary), transparent); animation-delay: 0s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, var(--accent-secondary), transparent); animation-delay: -5s; }
+        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: radial-gradient(circle, #3b82f6, transparent); animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* --- Original 3D Grid Floor --- */
+        .grid-floor {
+            position: absolute;
+            bottom: -20%; left: -50%; width: 200%; height: 60vh;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.3) 1px, transparent 1px);
+            background-size: 4rem 4rem;
+            transform: perspective(500px) rotateX(60deg);
+            opacity: 0.2;
+            mask-image: linear-gradient(to top, black 0%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(4rem); }
+        }
+
+        /* --- Clean Utilities --- */
+        .word-wrap { overflow: hidden; display: inline-block; vertical-align: bottom; line-height: 1.1; }
+        
+        .project-img {
+            transition: transform 0.7s ease, filter 0.5s ease;
+            filter: grayscale(100%);
+        }
+        .group:hover .project-img {
+            transform: scale(1.03);
+            filter: grayscale(0%);
+        }
+
+        /* --- Original Bento Grid Details --- */
+        .bento-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            transition: all 0.4s ease;
+        }
+        .bento-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+
+    <div id="cursor"></div>
+    
+    <div class="noise-overlay"></div>
+    <div class="blob-cont">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav class="fixed top-0 left-0 w-full p-6 md:p-10 flex justify-between items-center z-40 mix-blend-difference text-white">
+        <a href="#" class="text-xl font-bold tracking-tight hover-trigger">PM.</a>
+        <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-light">
+            <a href="#experience" class="hover:text-indigo-400 transition-colors hover-trigger">Experience</a>
+            <a href="#work" class="hover:text-indigo-400 transition-colors hover-trigger">Work</a>
+            <a href="#about" class="hover:text-indigo-400 transition-colors hover-trigger">About</a>
+            <a href="#contact" class="hover:text-indigo-400 transition-colors hover-trigger">Contact</a>
+        </div>
+        <button class="md:hidden hover-trigger"><i data-lucide="menu"></i></button>
+    </nav>
+
+    <main>
+        <section class="min-h-screen flex flex-col justify-center px-6 md:px-20 relative pt-20 overflow-hidden">
+            <div class="grid-floor"></div>
+
+            <div class="max-w-7xl mx-auto w-full z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-end">
+                    <div class="flex flex-col items-start hero-hidden-text">
+                        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-4 text-xs font-mono uppercase tracking-widest text-gray-300">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span> Software Developer Intern
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:items-end hero-hidden-text">
+                        <p class="font-mono text-xs text-gray-400 uppercase tracking-widest text-left md:text-right leading-loose">
+                            Location: Nairobi, KE<br>
+                            Focus: Cyber Forensics & Dev
+                        </p>
+                    </div>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl lg:text-[7.5rem] font-bold tracking-tighter mix-blend-overlay">
+                    <div class="word-wrap"><span class="hero-hidden-reveal inline-block">Software </span></div><br>
+                    <div class="word-wrap"><span class="hero-hidden-reveal inline-block">Security</span></div><br>
+                    <div class="word-wrap"><span class="hero-hidden-reveal inline-block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-fuchsia-400">Developer</span></div><br>
+                    <div class="word-wrap"><span class="hero-hidden-reveal inline-block">& Creative.</span></div>
+                </h1>
+
+                <div class="max-w-2xl mt-8 hero-hidden-text">
+                    <p class="text-gray-400 text-lg md:text-xl font-light leading-relaxed">
+                        Software Developer with hands-on experience building full-stack web applications and machine learning solutions. Crafting secure, user-centric digital experiences at the intersection of logic and imagination.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-32 px-6 md:px-20 relative z-10 border-t border-white/5">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-4xl md:text-6xl font-bold tracking-tighter mb-16">Experience</h2>
+
+                <div class="flex flex-col w-full border-t border-white/10">
+                    <div class="grid grid-cols-1 md:grid-cols-12 py-12 border-b border-white/10 hover-trigger cursor-none group">
+                        <div class="md:col-span-3 font-mono text-indigo-400 text-sm mb-4 md:mb-0">May 2026 - Present</div>
+                        <div class="md:col-span-4 pr-6">
+                            <h3 class="text-2xl font-bold mb-2 group-hover:text-indigo-300 transition-colors">Software Developer Intern</h3>
+                            <p class="text-gray-500 font-serif italic">Momentum Labs</p>
+                        </div>
+                        <div class="md:col-span-5 text-gray-400 text-sm leading-relaxed">
+                            Developed the frontend for a client-facing digital product using Next.js, React, JavaScript, and Tailwind CSS, translating design requirements into responsive user interface sections. Built reusable components, implemented page layouts, and resolved frontend issues to improve usability and overall user experience.
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 py-12 border-b border-white/10 hover-trigger cursor-none group">
+                        <div class="md:col-span-3 font-mono text-fuchsia-400 text-sm mb-4 md:mb-0">Jan 2026 - Mar 2026</div>
+                        <div class="md:col-span-4 pr-6">
+                            <h3 class="text-2xl font-bold mb-2 group-hover:text-fuchsia-300 transition-colors">Collaborative Software Dev</h3>
+                            <p class="text-gray-500 font-serif italic">KenGen ICT Attachment</p>
+                        </div>
+                        <div class="md:col-span-5 text-gray-400 text-sm leading-relaxed">
+                            Co-engineered a full-stack Procurement Planning System that automated budget tracking, supported compliance, and reduced manual Excel-based processes. Resolved approximately 500 monthly support tickets and participated in IT security walkthroughs covering Cisco Duo authentication and Microsoft LAPS.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="work" class="py-20 px-6 md:px-20 relative z-10">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-end justify-between mb-24">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter">Selected<br>Works</h2>
+                    <span class="text-gray-400 hidden md:block font-mono">(01 — 05)</span>
+                </div>
+
+                <div class="flex flex-col gap-32">
+
+                    <div class="group cursor-none hover-trigger w-full relative">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+                            <div class="md:col-span-7 overflow-hidden rounded-2xl relative aspect-[16/10] bg-black">
+                                <img src="C2B.PNG" class="project-img w-full h-full object-cover object-top" alt="Cookies to Breaches">
+                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-6">
+                                    <a href="https://cookiestobreaches.web.app/" target="_blank" class="px-6 py-3 bg-white text-black rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 hover-trigger">
+                                        <i data-lucide="external-link" class="w-4 h-4"></i> Live Demo
+                                    </a>
+                                    <a href="https://github.com/ndanupesh/Cookies-to-Breaches.git" target="_blank" class="px-6 py-3 border border-white text-white rounded-full font-bold text-sm hover:bg-white hover:text-black transition-all flex items-center gap-2 hover-trigger">
+                                        <i data-lucide="github" class="w-4 h-4"></i> Code
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="md:col-span-5 md:pl-10">
+                                <span class="text-indigo-400 font-mono text-sm mb-4 block">01 / Privacy Awareness App</span>
+                                <h3 class="text-4xl font-bold mb-6 group-hover:text-indigo-300 transition-colors">Cookies To Breaches</h3>
+                                <p class="text-gray-400 text-base mb-8 leading-relaxed">
+                                    Designed and developed an interactive web application to educate users on digital privacy, specifically tracking how browser cookies can lead to security breaches. Engineered distinct modules including a "Breach Simulation" and visual data mapping.
+                                </p>
+                                <div class="flex gap-3 text-xs text-gray-300 font-mono">
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">JavaScript</span>
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">HTML/CSS</span>
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">Simulation</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group cursor-none hover-trigger w-full relative">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+                            <div class="md:col-span-5 md:order-1 order-2 md:pr-10 text-left md:text-right">
+                                <span class="text-fuchsia-400 font-mono text-sm mb-4 block">02 / Utility Web App</span>
+                                <h3 class="text-4xl font-bold mb-6 group-hover:text-fuchsia-300 transition-colors">GEN CIU</h3>
+                                <p class="text-gray-400 text-base mb-8 leading-relaxed">
+                                    Created and designed a CIU-Free token entry web application to simulate prepaid electricity token entry without using a physical Customer Interface Unit, helping users to input tokens remotely.
+                                </p>
+                                <div class="flex gap-3 text-xs text-gray-300 font-mono md:justify-end">
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">JavaScript</span>
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">Firebase</span>
+                                </div>
+                            </div>
+                            <div class="md:col-span-7 md:order-2 order-1 overflow-hidden rounded-2xl relative aspect-[16/10] bg-black">
+                                <img src="GENCIU.PNG" class="project-img w-full h-full object-cover object-top" alt="GEN CIU">
+                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-6">
+                                    <a href="https://genciu-70d2e.web.app/" target="_blank" class="px-6 py-3 bg-white text-black rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 hover-trigger">
+                                        <i data-lucide="external-link" class="w-4 h-4"></i> Live Demo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group cursor-none hover-trigger w-full relative">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+                            <div class="md:col-span-7 overflow-hidden rounded-2xl relative aspect-[16/10] bg-black">
+                                <img src="Artsyrealm.PNG" class="project-img w-full h-full object-cover object-top" alt="Artsy Realm">
+                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-6">
+                                    <a href="https://digital-art-ten.vercel.app/" target="_blank" class="px-6 py-3 bg-white text-black rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2 hover-trigger">
+                                        <i data-lucide="external-link" class="w-4 h-4"></i> Live Demo
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="md:col-span-5 md:pl-10">
+                                <span class="text-blue-400 font-mono text-sm mb-4 block">03 / Creative Platform</span>
+                                <h3 class="text-4xl font-bold mb-6 group-hover:text-blue-300 transition-colors">Artsy Realm</h3>
+                                <p class="text-gray-400 text-base mb-8 leading-relaxed">
+                                    A dynamic platform showcasing photography and artwork from various artists. Built utilizing a NoSQL database architecture to handle flexible content management and media display seamlessly.
+                                </p>
+                                <div class="flex gap-3 text-xs text-gray-300 font-mono">
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">MongoDB</span>
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">Express</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group cursor-none hover-trigger w-full relative">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+                            <div class="md:col-span-5 md:order-1 order-2 md:pr-10 text-left md:text-right">
+                                <span class="text-indigo-400 font-mono text-sm mb-4 block">04 / Machine Learning</span>
+                                <h3 class="text-4xl font-bold mb-6 group-hover:text-indigo-300 transition-colors">Sales Forecasting App</h3>
+                                <p class="text-gray-400 text-base mb-8 leading-relaxed">
+                                    A Python-based predictive application deployed on Streamlit. Utilizes historical datasets and machine learning algorithms to map and accurately forecast future sales trends.
+                                </p>
+                                <div class="flex gap-3 text-xs text-gray-300 font-mono md:justify-end">
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">Python</span>
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">Streamlit</span>
+                                    <span class="px-3 py-1 border border-white/20 rounded-full">Scikit-Learn</span>
+                                </div>
+                            </div>
+                            <div class="md:col-span-7 md:order-2 order-1 overflow-hidden rounded-2xl relative aspect-[16/10] bg-black">
+                                <img src="Saleforecast.PNG" class="project-img w-full h-full object-cover object-top" alt="AI Tool">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full relative border border-white/10 p-10 rounded-2xl bg-white/5 backdrop-blur-sm hover-trigger cursor-none">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                            <div>
+                                <span class="text-indigo-400 font-mono text-sm mb-3 block animate-pulse">05 / Active Architecture</span>
+                                <h3 class="text-3xl font-bold mb-3">Articulate</h3>
+                                <p class="text-gray-400 max-w-2xl text-base leading-relaxed">
+                                    A full-stack AI-powered articulation and coaching platform. Integrating Next.js, FastAPI, and Python to bridge analytical backend infrastructure with intuitive frontend mechanics.
+                                </p>
+                            </div>
+                            <div class="px-5 py-2 border border-indigo-500/50 text-indigo-400 rounded-full font-mono text-xs">
+                                Status: In Development
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-32 px-6 md:px-20 relative overflow-hidden z-10 border-t border-white/5">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-sm font-mono text-indigo-400 mb-12 uppercase tracking-widest">About Me</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <div class="col-span-1 md:col-span-2 row-span-1 bento-card p-8 md:p-10 flex flex-col justify-center hover-trigger cursor-none relative">
+                        <h3 class="text-2xl font-bold mb-4">Hello, I'm Patience, Pesh to friends and family:)</h3>
+                        <p class="text-lg md:text-xl text-gray-300 leading-relaxed font-light">
+                            I am currently pursuing an <span class="text-white font-medium">Applied Computer Technology degree</span>, concentrating in Forensic Information Technology and Cybercrime at USIU-Africa.
+                            <br><br>
+                            I aim to build applications that are as secure as they are beautiful. When I'm not coding, you'll find me sketching, smashing birdies on the badminton court, or over-analyzing plot holes in crime documentaries.
+                        </p>
+                    </div>
+
+                    <a href="https://substack.com/@patiencendanu" target="_blank" class="col-span-1 bento-card p-8 flex flex-col justify-center items-start hover-trigger cursor-none bg-indigo-900/10 group">
+                        <span class="text-xs font-mono text-indigo-400 uppercase mb-3">Research & Writing</span>
+                        <h4 class="text-2xl font-bold mb-3 group-hover:text-indigo-300 transition-colors">Neurodiversity & Tech</h4>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">Exploring the nuances of the mind and actively navigating the double empathy problem through my writing.</p>
+                        <div class="mt-auto flex items-center gap-2 text-sm font-bold text-white">
+                            Read on Substack <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-2 transition-transform"></i>
+                        </div>
+                    </a>
+
+                    <div class="col-span-1 bento-card p-6 flex flex-col justify-center items-center text-center hover-trigger cursor-none relative overflow-hidden">
+                        <i data-lucide="map-pin" class="w-6 h-6 text-fuchsia-400 mb-3"></i>
+                        <h4 class="text-lg font-bold text-white"> Nairobi, Kenya. </h4>
+                        <div class="mt-3 px-4 py-1.5 bg-green-500/10 text-green-400 text-xs font-mono uppercase tracking-widest rounded-full border border-green-500/20 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Available
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 bento-card p-6 flex flex-col justify-center hover-trigger cursor-none relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-indigo-900/10 transition-opacity opacity-0 group-hover:opacity-100"></div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <i data-lucide="fingerprint" class="w-6 h-6 text-indigo-400"></i>
+                            <h4 class="font-bold text-white text-lg">Detective Mode</h4>
+                        </div>
+                        <p class="text-sm text-gray-400 leading-relaxed">Why specialize in Cybercrime? Blame <em>FBI: Most Wanted</em>. I wanted to be the brains behind the screens. Because people lie, but their digital footprints don't.</p>
+                    </div>
+
+                    <div class="col-span-1 bento-card p-6 flex flex-col justify-center hover-trigger cursor-none group">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-white text-lg">Badminton</h4>
+                            <i data-lucide="wind" class="w-6 h-6 text-fuchsia-400 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                        <p class="text-sm text-gray-400 leading-relaxed">Court time is my downtime, and the only exercise you'll catch me doing &#128521;.</p>
+                    </div>
+
+                    <div class="col-span-1 bento-card p-6 flex flex-col justify-center hover-trigger cursor-none relative overflow-hidden group">
+                         <div class="absolute inset-0 bg-cover bg-center opacity-30 transition-transform duration-700 group-hover:scale-110" style="background-image: url('Spotify.PNG');"></div>
+                         <div class="absolute inset-0 bg-black/50"></div>
+                         <div class="relative z-10 flex flex-col justify-between h-full">
+                            <h4 class="text-indigo-300 text-[10px] font-mono uppercase tracking-widest mb-1">On Repeat</h4>
+                            <div class="mt-auto">
+                                <p class="text-lg font-bold text-white">The Art of Loving</p>
+                                <p class="text-sm text-gray-300">Olivia Dean</p>
+                            </div>
+                         </div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 bento-card p-8 flex flex-row items-center justify-between hover-trigger cursor-none relative overflow-hidden group">
+                         <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-indigo-500/10 to-transparent"></div>
+                         <div class="relative z-10 max-w-sm">
+                            <h4 class="text-xl font-bold mb-3 flex items-center gap-2 text-white">
+                                <i data-lucide="pencil" class="w-5 h-5 text-fuchsia-400"></i> The Creative Side
+                            </h4>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Software is logic, but design is emotion. I love sketching and exploring traditional art to keep my creativity flowing when the screen turns off. Constantly seeking inspiration from platforms like Awwwards.
+                            </p>
+                         </div>
+                         <div class="hidden md:block relative z-10 opacity-30 group-hover:opacity-80 transition-opacity">
+                            <i data-lucide="palette" class="w-16 h-16 text-white"></i>
+                         </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="min-h-[70vh] flex flex-col justify-center px-6 md:px-20 relative z-10 border-t border-white/5">
+            <div class="max-w-6xl w-full mx-auto">
+                <div class="mb-16">
+                    <p class="text-indigo-400 text-sm font-mono uppercase tracking-widest mb-6">What's Next?</p>
+                    <h2 class="text-5xl md:text-8xl lg:text-9xl font-bold tracking-tighter">
+                        Let's build <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-fuchsia-500">the future.</span>
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 border-t border-white/10 pt-12">
+                    <div class="flex items-center">
+                        <a href="mailto:ndanupeshii@gmail.com" class="text-2xl md:text-4xl hover:text-indigo-400 transition-colors hover-trigger cursor-none inline-flex items-center gap-3 break-all md:break-normal font-bold">
+                            ndanupeshii@gmail.com <i data-lucide="arrow-up-right" class="w-8 h-8"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="flex flex-col lg:items-end gap-6 lg:gap-8">
+                        <div class="flex flex-wrap gap-6 md:gap-8 text-sm font-mono uppercase tracking-widest">
+                            <a href="https://www.linkedin.com/in/patience-muinde-040380286/" target="_blank" class="hover:text-indigo-400 hover-trigger cursor-none transition-colors">LinkedIn</a>
+                            <a href="https://github.com/ndanupesh" target="_blank" class="hover:text-indigo-400 hover-trigger cursor-none transition-colors">Github</a>
+                            <a href="https://substack.com/@patiencendanu" target="_blank" class="hover:text-indigo-400 hover-trigger cursor-none transition-colors">Substack</a>
+                            <a href="http://bit.ly/46cicOS" target="_blank" class="hover:text-indigo-400 hover-trigger cursor-none transition-colors">Portfolio V1</a>
+                        </div>
+                        <p class="text-gray-600 text-xs lg:mt-auto pt-8 lg:pt-0 font-mono">© 2026 PATIENCE MUINDE. ALL RIGHTS RESERVED.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- Custom Cursor Logic (Restored from Original) ---
+        const cursor = document.getElementById('cursor');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+
+        gsap.set(cursor, {xPercent: -50, yPercent: -50});
+
+        document.addEventListener('mousemove', (e) => {
+            if (cursor.style.opacity === '0' || cursor.style.opacity === '') {
+                cursor.style.opacity = 1;
+            }
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            trigger.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- Initialize Libraries ---
+        lucide.createIcons();
+
+        // Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            smooth: true,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // GSAP Animations (Restored from Original)
+        gsap.registerPlugin(ScrollTrigger);
+
+        const tl = gsap.timeline();
+        
+        tl.from('.hero-hidden-reveal', {
+            y: "110%", 
+            duration: 1.5,
+            stagger: 0.2,
+            ease: "power4.out"
+        })
+        .from('.hero-hidden-text', {
+            opacity: 0,
+            y: 20,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power2.out"
+        }, "-=1.0");
+
+        // Bento Box Animations
+        gsap.from('.bento-card', {
+            scrollTrigger: {
+                trigger: '#about',
+                start: "top 70%",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out"
+        });
+
+        // Background Blob Parallax
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const blobs = document.querySelectorAll('.blob');
+            if(blobs.length >= 3) {
+                blobs[0].style.transform = `translateY(${scrolled * 0.2}px)`;
+                blobs[1].style.transform = `translateY(${scrolled * -0.1}px)`;
+                blobs[2].style.transform = `translateY(${scrolled * 0.15}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
