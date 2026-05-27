@@ -2119,120 +2119,44 @@
    Keeps desktop hero unchanged. Improves phone readability.
    ========================================================= */
 
-@media (max-width: 620px) {
-  .hero {
-    min-height: auto;
-    padding: 92px 0 54px;
-    align-items: flex-start;
-  }
-
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr !important;
-    gap: 28px;
-  }
-
-  .hero-grid > div:first-child {
-    order: 1;
-  }
-
-  .hero-visual {
-    order: 2;
-    width: 100%;
-    min-height: 230px;
-    margin-top: 10px;
-  }
-
-  .eyebrow {
-    margin-bottom: 18px;
-    font-size: 10px;
-    letter-spacing: .13em;
-  }
-
+  @media (max-width: 620px) {
   h1 {
-    max-width: 100%;
-    font-size: clamp(3.05rem, 15.5vw, 4.65rem);
-    line-height: .9;
-    letter-spacing: -.06em;
-  }
-
-  h1 .word-wrap {
-    display: block;
-    overflow: visible;
-    padding-bottom: .02em;
+    font-size: clamp(3.1rem, 15.2vw, 4.8rem) !important;
+    line-height: .9 !important;
+    letter-spacing: -.065em !important;
   }
 
   h1 .word-wrap:nth-of-type(2) .hero-word {
-    font-size: .88em;
-    letter-spacing: -.065em;
+    font-size: .82em !important;
+    letter-spacing: -.07em !important;
   }
 
   h1 .word-wrap:nth-of-type(4) .hero-word {
-    font-size: .92em;
-  }
-
-  .soft-italic {
-    font-size: .92em;
+    font-size: .92em !important;
   }
 
   .hero-copy {
-    max-width: 95%;
-    margin-top: 22px;
-    font-size: 1rem;
-    line-height: 1.55;
-  }
-
-  .hero-plate {
-    right: 0;
-    top: 42px;
-    width: 88%;
-    height: 180px;
-    border-radius: 24px;
-  }
-
-  .hero-visual .status-card {
-    top: 0;
-    right: 0;
-    width: min(88%, 330px);
-    padding: 18px 18px 20px;
-    border-radius: 22px;
-  }
-
-  .hero-visual .status-card p:first-child {
-    margin-bottom: 12px;
-    font-size: 10px;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
   }
 
   .hero-visual .status-card p:last-child {
-    font-size: 1.2rem;
-    line-height: 1.12;
+    font-size: 1.16rem !important;
+    line-height: 1.15 !important;
   }
 }
 
 @media (max-width: 390px) {
   h1 {
-    font-size: clamp(2.75rem, 14.5vw, 3.85rem);
-    line-height: .92;
+    font-size: clamp(2.85rem, 14.2vw, 3.9rem) !important;
   }
 
   h1 .word-wrap:nth-of-type(2) .hero-word {
-    font-size: .84em;
+    font-size: .78em !important;
   }
 
-  .hero-copy {
-    font-size: .96rem;
-  }
-
-  .hero-visual {
-    min-height: 215px;
-  }
-
-  .hero-plate {
-    height: 165px;
-  }
-
-  .hero-visual .status-card {
-    width: 92%;
+  .hero-visual .status-card p:last-child {
+    font-size: 1.08rem !important;
   }
 }
   
